@@ -11,9 +11,9 @@ color: white; font-weight: 600; border-radius: 5px;" target="-blank">Live Demo</
 
 ## 🖼️ Screenshots
 
-![Home Page](screenshots/homepage.png)  
+![Home Page](screenshots/homepage.png)
 
-![Product Modal](screenshots/product-modal.png)  
+![Product Modal](screenshots/product-modal.png)
 
 ![Cart Preview](screenshots/cart.png)
 
@@ -21,8 +21,8 @@ color: white; font-weight: 600; border-radius: 5px;" target="-blank">Live Demo</
 
 ## 🚀 Features
 
-✅ **Product List** 
-✅ **Product Details Modal**    
+✅ **Product List**
+✅ **Product Details Modal**  
 ✅ **Add to Cart** with quantity tracking  
 ✅ **Remove from Cart** with modal confirmation  
 ✅ **Dynamic Cart Total**  
@@ -30,7 +30,7 @@ color: white; font-weight: 600; border-radius: 5px;" target="-blank">Live Demo</
 ✅ **Live Product Search**  
 ✅ **Pagination**  
 ✅ **Responsive UI**  
-🕒 **Cart Persistence with LocalStorage** 
+🕒 **Cart Persistence with LocalStorage**
 
 ---
 
@@ -45,6 +45,7 @@ function updateCartDisplay() {
   // Calculates total price
 }
 ```
+
 ### ❌ Remove with Confirmation
 
 ```
@@ -76,7 +77,7 @@ furniture-store/
 
 ```js
 function addToCart(productId) {
-  const product = products.find(p => p.id === productId);
+  const product = products.find((p) => p.id === productId);
   cart.push(product);
   updateCartDisplay();
   showAlert(`${product.name} added to cart!`);
@@ -84,6 +85,7 @@ function addToCart(productId) {
 ```
 
 ## 📱 Responsive Design
+
 This website adjusts seamlessly to:
 
 ✅ Mobile Phones
@@ -95,12 +97,14 @@ This website adjusts seamlessly to:
 It uses flexbox, grid, and media queries for responsiveness.
 
 ## 🔧 Tech Stack
+
 - HTML5 – Markup
 - CSS3 – Styles & layout
 - Vanilla JavaScript – DOM manipulation & logic
 - Font Awesome – Icons
 
 ## 🔮 Roadmap
+
 - Product category pages
 - Checkout page & form
 - User login mockup
@@ -113,16 +117,19 @@ git clone https://github.com/paulmagadi/Furniture-Store.git
 cd Furniture-Store
 ```
 
-open `index.html`
+**Run locally:** start a simple HTTP server, then open [http://localhost:8080](http://localhost:8080) in your browser:
 
-No build tools required — just open in your browser.
+```bash
+python3 -m http.server 8080
+```
 
 ## ✍️ Author
+
 Paul Magadi
 
 👨‍💻 Software Developer & UI/UX Enthusiast
 [🌐 Portfolio](https://paulmagadi.github.io) | [🐙 GitHub](https://github.com/paulmagadi) | [🔗 LinkedIn](https://www.linkedin.com/in/paulmagadi)
 
 ## 📄 License
-This project is licensed under the MIT License.
 
+This project is licensed under the MIT License.
