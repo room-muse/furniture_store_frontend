@@ -32,7 +32,7 @@ An interactive and responsive eCommerce frontend for a furniture store, built us
 ## 📦 Installation
 
 ```
-git clone https://github.com/paulmagadi/Furniture-Store.git
+git clone https://github.com/room-muse/furniture_store_frontend.git
 cd Furniture-Store
 ```
 
