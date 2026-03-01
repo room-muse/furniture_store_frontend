@@ -29,6 +29,19 @@ An interactive and responsive eCommerce frontend for a furniture store, built us
 
 ---
 
+## 📦 Installation
+
+```
+git clone https://github.com/paulmagadi/Furniture-Store.git
+cd Furniture-Store
+```
+
+**Run locally:** start a simple HTTP server, then open [http://localhost:8080](http://localhost:8080) in your browser:
+
+```bash
+python3 -m http.server 8080
+```
+
 ## 🧠 How It Works
 
 ### 🛒 Cart Logic
@@ -104,19 +117,6 @@ It uses flexbox, grid, and media queries for responsiveness.
 - Checkout page & form
 - User login mockup
 - Backend (Django / Firebase) integration (optional future upgrade)
-
-## 📦 Installation
-
-```
-git clone https://github.com/paulmagadi/Furniture-Store.git
-cd Furniture-Store
-```
-
-**Run locally:** start a simple HTTP server, then open [http://localhost:8080](http://localhost:8080) in your browser:
-
-```bash
-python3 -m http.server 8080
-```
 
 ## ✍️ Author
 
