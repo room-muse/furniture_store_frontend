@@ -79,7 +79,7 @@
 // ========== Product Data ========== //
 const products = [
   {
-    id: "c6a4b5ba-a7b7-4288-b575-5b16a60950af",
+    id: "02ed2874-4d57-48c1-87c7-373f562067fb",
     name: "Cozy Swivel Chair",
     price: 299,
     category: "chair",
@@ -87,7 +87,7 @@ const products = [
     description: "A cozy swivel chair for comfortable seating with a smooth 360-degree turn.",
   },
   {
-    id: "8da62124-8610-4ae7-b9d8-ce2e27cdc37f",
+    id: "32e8a61f-e591-4c03-af7e-f1789b17c15d",
     name: "Ethan Sofa",
     price: 599,
     category: "sofa",
@@ -95,7 +95,7 @@ const products = [
     description: "The Ethan Sofa combines classic style with modern comfort for your living space.",
   },
   {
-    id: "5310ccaf-f00d-4059-bfff-0c29b8b5b0f0",
+    id: "a74b5357-81db-4177-8731-c97ba268fe55",
     name: "Calla Solid Wood Coffee Table",
     price: 349,
     category: "table",
@@ -103,7 +103,7 @@ const products = [
     description: "A solid wood coffee table with clean lines and durable construction.",
   },
   {
-    id: "922ece9e-a2c9-440e-8de3-882e5cb2a331",
+    id: "9f417e27-c3a0-4a34-a6cd-b58786ae5521",
     name: "Stowe Solid Wood Side Table",
     price: 199,
     category: "table",
@@ -111,7 +111,7 @@ const products = [
     description: "A versatile solid wood side table ideal next to sofas or beds.",
   },
   {
-    id: "8eb94e38-0e7c-4bb8-8e6d-c80d12266e6e",
+    id: "1ddd7ee9-81ed-478b-80de-2bab44baf0f5",
     name: "Mid-Century Bookshelf w/ Drawer",
     price: 429,
     category: "bookcase",
@@ -119,7 +119,7 @@ const products = [
     description: "A mid-century bookshelf with an integrated drawer for extra storage.",
   },
   {
-    id: "edcedd5f-524c-4023-bb11-45599d4cb454",
+    id: "e895cc86-56bd-48b8-b894-c9d117d326c8",
     name: "Willow Round Coffee Table",
     price: 279,
     category: "table",
@@ -127,7 +127,7 @@ const products = [
     description: "A round coffee table with a willow-inspired design for a natural look.",
   },
   {
-    id: "2c7241d2-48a1-4c0a-abce-2771efa68562",
+    id: "c1f3e4c6-add1-4704-9cdf-ecd87c3bdfd5",
     name: "Ellington Oval Pedestal Dining Table",
     price: 799,
     category: "table",
@@ -135,7 +135,7 @@ const products = [
     description: "An oval pedestal dining table, perfect for family meals and entertaining.",
   },
   {
-    id: "6c3956db-d3cf-4a66-97bf-ddecfcbd37db",
+    id: "65d246c1-3b9a-4f4e-827b-d18ec9409229",
     name: "Stuart Sling Chair",
     price: 249,
     category: "chair",
