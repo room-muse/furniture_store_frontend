@@ -1,9 +1,9 @@
-id,name,catagory,length,width,height,imageUrl
-1,Cozy Swivel Chair,chair,0.89,0.98,0.73,https://drive.google.com/file/d/1VRnh1hek_eBXW2-Iqc3MtRmz1bfWynnA/view?usp=sharing
-2,Ethan Sofa,sofa,1.04,2.26,0.76,https://drive.google.com/file/d/1m47tf0Yqo_BScrFj0RqPwytyW8YdJPuj/view?usp=sharing
-3,Calla Solid Wood Coffee Table,table,0.61,1.22,0.41,https://drive.google.com/file/d/1CQXQDObcA8PY6ehZ1h7g7PNOqBmnhv-F/view?usp=sharing
-4,Stowe Solid Wood Side Table,table,0.56,0.56,0.46,https://drive.google.com/file/d/1MpV9FIl59Er48v8wciH-YJFnHK_JDXSh/view?usp=sharing
-5,Mid-Century Bookshelf w/ Drawer,bookcase,0.38,0.97,1.78,https://drive.google.com/file/d/1-ylJCb0p42aqj5IrwIeYSnbu33RZAaew/view?usp=sharing
-6,Willow Round Coffee Table,table,0.91,0.91,0.4,https://drive.google.com/file/d/1CTq-VI_OGrOXgNPiw55IHfmkrvHdGYVH/view?usp=sharing
-7,Ellington Oval Pedestal Dining Table,table,1.12,2.18,0.75,https://drive.google.com/file/d/1SK5cJTNOhz2cBYWK-UDaSFUbmKh8IUtE/view?usp=sharing
-8,Stuart Sling Chair,chair,0.81,0.7,0.86,https://drive.google.com/file/d/19XxHL4vfeyc3eZxVUJqfkUw9V52Byln_/view?usp=sharing
+id,name,category,length,width,height,imageUrl
+c6a4b5ba-a7b7-4288-b575-5b16a60950af,Cozy Swivel Chair,chair,0.89,0.98,0.73,https://raw.githubusercontent.com/room-muse/furniture_store_frontend/main/images/p1.png
+8da62124-8610-4ae7-b9d8-ce2e27cdc37f,Ethan Sofa,sofa,1.04,2.26,0.76,https://raw.githubusercontent.com/room-muse/furniture_store_frontend/main/images/p2.png
+5310ccaf-f00d-4059-bfff-0c29b8b5b0f0,Calla Solid Wood Coffee Table,table,0.61,1.22,0.41,https://raw.githubusercontent.com/room-muse/furniture_store_frontend/main/images/p3.png
+922ece9e-a2c9-440e-8de3-882e5cb2a331,Stowe Solid Wood Side Table,table,0.56,0.56,0.46,https://raw.githubusercontent.com/room-muse/furniture_store_frontend/main/images/p4.png
+8eb94e38-0e7c-4bb8-8e6d-c80d12266e6e,Mid-Century Bookshelf w/ Drawer,bookcase,0.38,0.97,1.78,https://raw.githubusercontent.com/room-muse/furniture_store_frontend/main/images/p5.png
+edcedd5f-524c-4023-bb11-45599d4cb454,Willow Round Coffee Table,table,0.91,0.91,0.4,https://raw.githubusercontent.com/room-muse/furniture_store_frontend/main/images/p6.png
+2c7241d2-48a1-4c0a-abce-2771efa68562,Ellington Oval Pedestal Dining Table,table,1.12,2.18,0.75,https://raw.githubusercontent.com/room-muse/furniture_store_frontend/main/images/p7.png
+6c3956db-d3cf-4a66-97bf-ddecfcbd37db,Stuart Sling Chair,chair,0.81,0.7,0.86,https://raw.githubusercontent.com/room-muse/furniture_store_frontend/main/images/p8.png
