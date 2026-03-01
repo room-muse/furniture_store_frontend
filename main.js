@@ -182,7 +182,7 @@ function renderProducts(list) {
             <img src="${product.image}" alt="${product.name}" class="product-image" title="${product.name}">
             <h3 class="product-name">${product.name}</h3>
             <p>Price: $${product.price}</p>
-            <button onclick="addToCart(${product.id})" class="add-to-cart btn-primary">Add to Cart</button>
+            <button onclick="addToCart('${product.id}')" class="add-to-cart btn-primary">Add to Cart</button>
             <div class="product-actions">
                 <button class="view-product btn-primary" data-id="${product.id}">View</button>
                 <button class="view-ar btn-ar" data-id="${product.id}">3D/AR</button>
@@ -195,7 +195,7 @@ function renderProducts(list) {
 function attachViewButtons() {
   document.querySelectorAll(".view-product").forEach((button) => {
     button.addEventListener("click", (e) => {
-      openProductModal(parseInt(e.target.getAttribute("data-id")));
+      openProductModal(e.target.getAttribute("data-id"));
     });
   });
   document.querySelectorAll(".view-ar").forEach((button) => {
@@ -260,7 +260,7 @@ function openProductModal(productId) {
 }
 
 document.getElementById("modal-add-to-cart").addEventListener("click", (e) => {
-  addToCart(parseInt(e.target.getAttribute("data-id")));
+  addToCart(e.target.getAttribute("data-id"));
   document.getElementById("product-modal").style.display = "none";
 });
 
@@ -411,7 +411,7 @@ function updateCartDisplay() {
                     <h4>${item.name}</h4>
                     <p>Price: $${item.price}</p>
                 </div>
-                <button onclick="confirmRemove(${item.id}, '${item.name}')"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="confirmRemove('${item.id}', '${item.name}')"><i class="fa-solid fa-xmark"></i></button>
             `;
       cartItems.appendChild(el);
     });
