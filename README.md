@@ -4,11 +4,6 @@ An interactive and responsive eCommerce frontend for a furniture store, built us
 
 ---
 
-## Live Demo
-
-<a href="https://github.com/paulmagadi/Furniture-Store" style="padding: 11px 20px; background-color: red;
-color: white; font-weight: 600; border-radius: 5px;" target="-blank">Live Demo</a>
-
 ## 🖼️ Screenshots
 
 ![Home Page](screenshots/homepage.png)
