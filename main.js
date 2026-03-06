@@ -200,7 +200,7 @@ function attachViewButtons() {
   });
   document.querySelectorAll(".view-ar").forEach((button) => {
     button.addEventListener("click", (e) => {
-      openArView(parseInt(e.target.getAttribute("data-id")));
+      openArView(e.target.getAttribute("data-id"));
     });
   });
 }
@@ -267,7 +267,7 @@ document.getElementById("modal-add-to-cart").addEventListener("click", (e) => {
 const modalViewAr = document.getElementById("modal-view-ar");
 if (modalViewAr) {
   modalViewAr.addEventListener("click", (e) => {
-    openArView(parseInt(e.target.getAttribute("data-id")));
+    openArView(e.target.getAttribute("data-id"));
   });
 }
 
