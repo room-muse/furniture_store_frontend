@@ -531,59 +531,57 @@ window.attachViewButtons = function () {
       function openOnIOS(opts) {
         var href =
           String(opts.usdzUrl || "").split("#")[0] + "#allowsContentScaling=0";
-        var title = opts.name || "Furniture";
+        var title = opts.name || "View in AR";
         var imageUrl =
           opts.imageUrl ||
           "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
 
-        // Replace the loading banner with a full-screen rel="ar" anchor.
-        // iOS Safari opens AR Quick Look directly (no dialog) when the user
-        // taps a rel="ar" link — so we make the ENTIRE screen tappable.
-        var banner = document.getElementById("rmar-deeplink-banner");
-        if (banner && banner.parentNode) {
-          banner.parentNode.removeChild(banner);
-        }
-
+        // Build exactly: <a rel="ar" href="...usdz#allowsContentScaling=0"><img ... src="...png"></a>
         var a = document.createElement("a");
         a.id = "rmar-deeplink-ar";
         a.setAttribute("rel", "ar");
         a.href = href;
-        a.style.cssText =
-          "position:fixed;inset:0;z-index:999999;display:flex;flex-direction:column;" +
-          "align-items:center;justify-content:center;" +
-          "background:#0b0b12;color:#fff;text-decoration:none;" +
-          "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;" +
-          "text-align:center;padding:24px;-webkit-tap-highlight-color:transparent;";
 
-        // rel="ar" requires a child <img>
         var img = document.createElement("img");
         img.alt = title;
+        img.className = "page-module_E0kJGG_cardImage";
         img.src = imageUrl;
-        img.style.cssText =
-          "width:120px;height:120px;object-fit:cover;border-radius:16px;" +
-          "margin-bottom:24px;box-shadow:0 8px 32px rgba(0,0,0,.5);";
         a.appendChild(img);
 
-        var arIcon = document.createElement("div");
-        arIcon.innerHTML =
-          '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:16px">' +
-          '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>' +
-          '<polyline points="3.27 6.96 12 12.01 20.73 6.96"/>' +
-          '<line x1="12" y1="22.08" x2="12" y2="12"/>' +
-          "</svg>";
-        a.appendChild(arIcon);
-
-        var h = document.createElement("div");
-        h.textContent = "Tap anywhere to view in AR";
-        h.style.cssText = "font-size:22px;font-weight:700;margin-bottom:8px;";
-        a.appendChild(h);
-
-        var s = document.createElement("div");
-        s.textContent = title;
-        s.style.cssText = "font-size:15px;color:rgba(255,255,255,.55);";
-        a.appendChild(s);
-
+        // Keep it in DOM but invisible
+        a.style.position = "fixed";
+        a.style.left = "-9999px";
+        a.style.top = "-9999px";
         document.body.appendChild(a);
+
+        // Show a prominent tap button immediately.
+        // We do NOT auto-click or fall back to window.location.href — both would
+        // trigger Safari's "View 3D object?" confirmation dialog.
+        // A real user tap on the rel="ar" anchor opens AR Quick Look directly with no dialog.
+        var banner = document.getElementById("rmar-deeplink-banner");
+        if (banner && !document.getElementById("rmar-deeplink-visible-btn")) {
+          var btn = document.createElement("button");
+          btn.id = "rmar-deeplink-visible-btn";
+          btn.textContent = "Open in AR";
+          btn.style.cssText =
+            "margin-top:20px;padding:16px 36px;border-radius:999px;border:none;" +
+            "background:#ffffff;color:#0b0b12;font-weight:700;font-size:18px;" +
+            "cursor:pointer;box-shadow:0 4px 24px rgba(0,0,0,.35);";
+          btn.onclick = function () {
+            a.click();
+          };
+          banner.innerHTML = "";
+          var label = document.createElement("div");
+          label.textContent = title + " is ready to view in AR.";
+          label.style.cssText = "font-size:17px;font-weight:600;margin-bottom:4px;";
+          var sub = document.createElement("div");
+          sub.textContent = "Tap the button below to open.";
+          sub.style.cssText = "font-size:14px;color:rgba(255,255,255,.6);margin-bottom:0;";
+          banner.appendChild(label);
+          banner.appendChild(sub);
+          banner.appendChild(document.createElement("br"));
+          banner.appendChild(btn);
+        }
       }
 
       function openNonIOS(url) {
