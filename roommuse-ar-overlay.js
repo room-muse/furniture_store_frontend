@@ -1,6 +1,6 @@
 /**
  * RoomMuse AR Overlay for furniture_store_frontend
- * 
+ *
  * WHAT THIS DOES:
  *   1. Overrides openArView() from main.js with a QR code modal
  *   2. Overrides attachViewButtons() to fix the parseInt(UUID) bug
@@ -10,8 +10,11 @@
  */
 
 // ── Config ──────────────────────────────────────────────────
-var ROOMMUSE_API = 'https://ar-backend-563656133641.us-central1.run.app';
-var ROOMMUSE_AR_VIEWER = 'https://ec-design.vercel.app';
+var ROOMMUSE_API = "https://ar-backend-563656133641.us-central1.run.app";
+var ROOMMUSE_AR_VIEWER = "https://ec-design.vercel.app";
+// When testing on localhost, QR should point to a phone-reachable URL.
+// Set this to your deployed site; local QR generation will use it.
+var ROOMMUSE_PUBLIC_SITE = "https://furniture-store-frontend-sooty.vercel.app/";
 var ROOMMUSE_QR_SIZE = 260;
 var _roommuse_cache = {};
 
@@ -21,145 +24,145 @@ var AR_CUBE_SVG =
   '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>' +
   '<polyline points="3.27 6.96 12 12.01 20.73 6.96"/>' +
   '<line x1="12" y1="22.08" x2="12" y2="12"/>' +
-  '</svg>';
+  "</svg>";
 
 var AR_CUBE_SVG_LG =
   '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
   '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>' +
   '<polyline points="3.27 6.96 12 12.01 20.73 6.96"/>' +
   '<line x1="12" y1="22.08" x2="12" y2="12"/>' +
-  '</svg>';
+  "</svg>";
 
 // ── Inject CSS ──────────────────────────────────────────────
 (function injectCSS() {
-  var style = document.createElement('style');
-  style.id = 'rmar-styles';
+  var style = document.createElement("style");
+  style.id = "rmar-styles";
   style.textContent = [
     /* ── Overlay ── */
-    '.rmar-overlay {',
-    '  position:fixed; inset:0; z-index:99999;',
-    '  display:flex; align-items:center; justify-content:center;',
-    '  background:rgba(10,10,20,.65); backdrop-filter:blur(6px);',
-    '  opacity:0; transition:opacity .3s; padding:20px;',
-    '}',
-    '.rmar-overlay.show { opacity:1; }',
-    '.rmar-box {',
-    '  background:#fff; border-radius:20px; padding:40px;',
-    '  max-width:420px; width:100%; text-align:center;',
-    '  box-shadow:0 24px 64px rgba(0,0,0,.25);',
-    '  transform:translateY(10px) scale(.97);',
-    '  transition:transform .3s;',
+    ".rmar-overlay {",
+    "  position:fixed; inset:0; z-index:99999;",
+    "  display:flex; align-items:center; justify-content:center;",
+    "  background:rgba(10,10,20,.65); backdrop-filter:blur(6px);",
+    "  opacity:0; transition:opacity .3s; padding:20px;",
+    "}",
+    ".rmar-overlay.show { opacity:1; }",
+    ".rmar-box {",
+    "  background:#fff; border-radius:20px; padding:40px;",
+    "  max-width:420px; width:100%; text-align:center;",
+    "  box-shadow:0 24px 64px rgba(0,0,0,.25);",
+    "  transform:translateY(10px) scale(.97);",
+    "  transition:transform .3s;",
     '  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;',
-    '  position:relative;',
-    '}',
-    '.rmar-overlay.show .rmar-box { transform:translateY(0) scale(1); }',
-    '.rmar-x {',
-    '  position:absolute; top:12px; right:12px;',
-    '  width:32px; height:32px; border:none; border-radius:50%;',
-    '  background:#f0f0f4; color:#666; cursor:pointer;',
-    '  font-size:18px; display:flex; align-items:center; justify-content:center;',
-    '}',
-    '.rmar-x:hover { background:#e0e0e4; color:#333; }',
-    '.rmar-modal-icon {',
-    '  width:64px; height:64px; border-radius:16px;',
-    '  background:linear-gradient(135deg,#e8f5e9,#c8e6c9);',
-    '  color:#2e7d32; display:inline-flex; align-items:center;',
-    '  justify-content:center; margin-bottom:16px;',
-    '}',
-    '.rmar-h { font-size:20px; font-weight:700; color:#1a1a2e; margin:0 0 6px; }',
-    '.rmar-sub { font-size:14px; color:#6b6b80; margin:0 0 6px; }',
-    '.rmar-sub b { color:#1a1a2e; }',
-    '.rmar-dims { font-size:12px; color:#999; margin:0 0 16px; }',
-    '.rmar-qr {',
-    '  display:flex; justify-content:center; align-items:center;',
-    '  padding:20px; background:#fafafc; border-radius:14px;',
-    '  margin-bottom:20px; min-height:300px;',
-    '}',
-    '.rmar-qr img { border-radius:6px; }',
-    '.rmar-spin {',
-    '  width:24px; height:24px; border:3px solid #e8e8ec;',
-    '  border-top-color:#233B3D; border-radius:50%;',
-    '  animation:rmar-sp .6s linear infinite; margin:0 auto 10px;',
-    '}',
-    '@keyframes rmar-sp { to { transform:rotate(360deg); } }',
-    '.rmar-steps {',
-    '  display:flex; align-items:center; justify-content:center;',
-    '  gap:8px; margin-bottom:16px;',
-    '}',
-    '.rmar-sn {',
-    '  width:26px; height:26px; border-radius:50%;',
-    '  background:#233B3D; color:#fff; font-size:12px;',
-    '  font-weight:700; line-height:26px; text-align:center;',
-    '}',
-    '.rmar-sl { font-size:11px; color:#6b6b80; }',
-    '.rmar-sa { color:#ccc; }',
-    '.rmar-link {',
-    '  display:inline-block; font-size:13px; color:#2e7d32;',
-    '  text-decoration:none; padding:8px 16px; border-radius:8px;',
-    '}',
-    '.rmar-link:hover { background:#e8f5e9; }',
-    '.rmar-note { font-size:12px; color:#999; margin-top:8px; line-height:1.5; }',
+    "  position:relative;",
+    "}",
+    ".rmar-overlay.show .rmar-box { transform:translateY(0) scale(1); }",
+    ".rmar-x {",
+    "  position:absolute; top:12px; right:12px;",
+    "  width:32px; height:32px; border:none; border-radius:50%;",
+    "  background:#f0f0f4; color:#666; cursor:pointer;",
+    "  font-size:18px; display:flex; align-items:center; justify-content:center;",
+    "}",
+    ".rmar-x:hover { background:#e0e0e4; color:#333; }",
+    ".rmar-modal-icon {",
+    "  width:64px; height:64px; border-radius:16px;",
+    "  background:linear-gradient(135deg,#e8f5e9,#c8e6c9);",
+    "  color:#2e7d32; display:inline-flex; align-items:center;",
+    "  justify-content:center; margin-bottom:16px;",
+    "}",
+    ".rmar-h { font-size:20px; font-weight:700; color:#1a1a2e; margin:0 0 6px; }",
+    ".rmar-sub { font-size:14px; color:#6b6b80; margin:0 0 6px; }",
+    ".rmar-sub b { color:#1a1a2e; }",
+    ".rmar-dims { font-size:12px; color:#999; margin:0 0 16px; }",
+    ".rmar-qr {",
+    "  display:flex; justify-content:center; align-items:center;",
+    "  padding:20px; background:#fafafc; border-radius:14px;",
+    "  margin-bottom:20px; min-height:300px;",
+    "}",
+    ".rmar-qr img { border-radius:6px; }",
+    ".rmar-spin {",
+    "  width:24px; height:24px; border:3px solid #e8e8ec;",
+    "  border-top-color:#233B3D; border-radius:50%;",
+    "  animation:rmar-sp .6s linear infinite; margin:0 auto 10px;",
+    "}",
+    "@keyframes rmar-sp { to { transform:rotate(360deg); } }",
+    ".rmar-steps {",
+    "  display:flex; align-items:center; justify-content:center;",
+    "  gap:8px; margin-bottom:16px;",
+    "}",
+    ".rmar-sn {",
+    "  width:26px; height:26px; border-radius:50%;",
+    "  background:#233B3D; color:#fff; font-size:12px;",
+    "  font-weight:700; line-height:26px; text-align:center;",
+    "}",
+    ".rmar-sl { font-size:11px; color:#6b6b80; }",
+    ".rmar-sa { color:#ccc; }",
+    ".rmar-link {",
+    "  display:inline-block; font-size:13px; color:#2e7d32;",
+    "  text-decoration:none; padding:8px 16px; border-radius:8px;",
+    "}",
+    ".rmar-link:hover { background:#e8f5e9; }",
+    ".rmar-note { font-size:12px; color:#999; margin-top:8px; line-height:1.5; }",
 
     /* ── Floating AR icon on product cards ── */
-    '.rmar-img-wrap {',
-    '  position:relative; width:100%;',
-    '}',
-    '.rmar-float-icon {',
-    '  position:absolute; top:8px; right:8px; z-index:10;',
-    '  width:40px; height:40px; border:none; border-radius:12px;',
-    '  background:#233B3D; color:#fff; cursor:pointer;',
-    '  display:flex; align-items:center; justify-content:center;',
-    '  box-shadow:0 2px 8px rgba(0,0,0,.25);',
-    '  transition:all .2s ease;',
-    '  padding:0;',
-    '}',
-    '.rmar-float-icon:hover {',
-    '  background:#2e7d32; transform:scale(1.1);',
-    '  box-shadow:0 4px 16px rgba(0,0,0,.35);',
-    '}',
-    '.rmar-float-icon svg { pointer-events:none; }',
+    ".rmar-img-wrap {",
+    "  position:relative; width:100%;",
+    "}",
+    ".rmar-float-icon {",
+    "  position:absolute; top:8px; right:8px; z-index:10;",
+    "  width:40px; height:40px; border:none; border-radius:12px;",
+    "  background:#233B3D; color:#fff; cursor:pointer;",
+    "  display:flex; align-items:center; justify-content:center;",
+    "  box-shadow:0 2px 8px rgba(0,0,0,.25);",
+    "  transition:all .2s ease;",
+    "  padding:0;",
+    "}",
+    ".rmar-float-icon:hover {",
+    "  background:#2e7d32; transform:scale(1.1);",
+    "  box-shadow:0 4px 16px rgba(0,0,0,.35);",
+    "}",
+    ".rmar-float-icon svg { pointer-events:none; }",
 
     /* ── Floating AR icon on product modal image ── */
-    '.rmar-modal-img-wrap {',
-    '  position:relative; display:inline-block; width:100%;',
-    '}',
-    '.rmar-modal-float-icon {',
-    '  position:absolute; top:10px; right:10px; z-index:10;',
-    '  width:44px; height:44px; border:none; border-radius:12px;',
-    '  background:#233B3D; color:#fff; cursor:pointer;',
-    '  display:flex; align-items:center; justify-content:center;',
-    '  box-shadow:0 2px 8px rgba(0,0,0,.25);',
-    '  transition:all .2s ease;',
-    '  padding:0;',
-    '}',
-    '.rmar-modal-float-icon:hover {',
-    '  background:#2e7d32; transform:scale(1.1);',
-    '}',
-    '.rmar-modal-float-icon svg { pointer-events:none; }',
+    ".rmar-modal-img-wrap {",
+    "  position:relative; display:inline-block; width:100%;",
+    "}",
+    ".rmar-modal-float-icon {",
+    "  position:absolute; top:10px; right:10px; z-index:10;",
+    "  width:44px; height:44px; border:none; border-radius:12px;",
+    "  background:#233B3D; color:#fff; cursor:pointer;",
+    "  display:flex; align-items:center; justify-content:center;",
+    "  box-shadow:0 2px 8px rgba(0,0,0,.25);",
+    "  transition:all .2s ease;",
+    "  padding:0;",
+    "}",
+    ".rmar-modal-float-icon:hover {",
+    "  background:#2e7d32; transform:scale(1.1);",
+    "}",
+    ".rmar-modal-float-icon svg { pointer-events:none; }",
 
     /* ── Override .btn-ar style ── */
-    '.btn-ar {',
-    '  background:#233B3D!important; color:#fff!important;',
-    '  border:none; padding:8px 16px; border-radius:5px;',
-    '  cursor:pointer; font-weight:600;',
-    '}',
-    '.btn-ar:hover { background:#2e7d32!important; }',
-  ].join('\n');
+    ".btn-ar {",
+    "  background:#233B3D!important; color:#fff!important;",
+    "  border:none; padding:8px 16px; border-radius:5px;",
+    "  cursor:pointer; font-weight:600;",
+    "}",
+    ".btn-ar:hover { background:#2e7d32!important; }",
+  ].join("\n");
   document.head.appendChild(style);
 })();
 
 // ── Load QRCode.js ──────────────────────────────────────────
 (function loadQR() {
-  if (typeof QRCode !== 'undefined') return;
-  var s = document.createElement('script');
-  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+  if (typeof QRCode !== "undefined") return;
+  var s = document.createElement("script");
+  s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
   document.head.appendChild(s);
 })();
 
 // ── Fetch model from backend ────────────────────────────────
 function _rmar_fetchModel(itemId) {
   if (_roommuse_cache[itemId]) return Promise.resolve(_roommuse_cache[itemId]);
-  return fetch(ROOMMUSE_API + '/items/' + encodeURIComponent(itemId))
+  return fetch(ROOMMUSE_API + "/items/" + encodeURIComponent(itemId))
     .then(function (r) {
       if (!r.ok) throw new Error(r.status);
       return r.json();
@@ -167,8 +170,8 @@ function _rmar_fetchModel(itemId) {
     .then(function (d) {
       var item = {
         id: d.id || itemId,
-        name: d.name || d.item_name || 'Furniture',
-        category: d.category || d.type || 'furniture',
+        name: d.name || d.item_name || "Furniture",
+        category: d.category || d.type || "furniture",
         modelUrl: d.usdzUrl,
         dimensions: {
           length: d.length || (d.dimensions && d.dimensions.length) || null,
@@ -176,12 +179,12 @@ function _rmar_fetchModel(itemId) {
           height: d.height || (d.dimensions && d.dimensions.height) || null,
         },
       };
-      console.log(item)
+      console.log(item);
       _roommuse_cache[itemId] = item;
       return item;
     })
     .catch(function (e) {
-      console.warn('[RoomMuse] fetch failed:', itemId, e);
+      console.warn("[RoomMuse] fetch failed:", itemId, e);
       return null;
     });
 }
@@ -189,9 +192,17 @@ function _rmar_fetchModel(itemId) {
 // ── Build AR link ───────────────────────────────────────────
 function _rmar_arLink(item) {
   if (!item || !item.modelUrl) return ROOMMUSE_AR_VIEWER;
-  var p = new URLSearchParams({ model: item.modelUrl, name: item.name, type: item.category });
+  var p = new URLSearchParams({
+    model: item.modelUrl,
+    name: item.name,
+    type: item.category,
+  });
   var dim = item.dimensions;
-  if (dim && dim.length) { p.set('length', dim.length); p.set('width', dim.width); p.set('height', dim.height); }
+  if (dim && dim.length) {
+    p.set("length", dim.length);
+    p.set("width", dim.width);
+    p.set("height", dim.height);
+  }
   return item.modelUrl;
 }
 
@@ -199,27 +210,34 @@ function _rmar_arLink(item) {
 // THE QR CODE MODAL
 // ══════════════════════════════════════════════════════════════
 function _rmar_openModal(productId) {
-  console.log('[RoomMuse] Opening AR modal for:', productId);
+  console.log("[RoomMuse] Opening AR modal for:", productId);
 
-  var name = 'this item';
-  if (typeof products !== 'undefined') {
+  var name = "this item";
+  if (typeof products !== "undefined") {
     for (var i = 0; i < products.length; i++) {
-      if (String(products[i].id) === String(productId)) { name = products[i].name; break; }
+      if (String(products[i].id) === String(productId)) {
+        name = products[i].name;
+        break;
+      }
     }
   }
 
   // Close product detail modal if open
-  var pm = document.getElementById('product-modal');
-  if (pm) pm.style.display = 'none';
+  var pm = document.getElementById("product-modal");
+  if (pm) pm.style.display = "none";
 
-  var ov = document.createElement('div');
-  ov.className = 'rmar-overlay';
+  var ov = document.createElement("div");
+  ov.className = "rmar-overlay";
   ov.innerHTML =
     '<div class="rmar-box">' +
     '<button class="rmar-x">&times;</button>' +
-    '<div class="rmar-modal-icon">' + AR_CUBE_SVG_LG + '</div>' +
+    '<div class="rmar-modal-icon">' +
+    AR_CUBE_SVG_LG +
+    "</div>" +
     '<h2 class="rmar-h">View in Your Space</h2>' +
-    '<p class="rmar-sub">Scan with your phone to place <b>' + name + '</b> in AR</p>' +
+    '<p class="rmar-sub">Scan with your phone to place <b>' +
+    name +
+    "</b> in AR</p>" +
     '<div class="rmar-dims" id="rmar-dims"></div>' +
     '<div class="rmar-qr" id="rmar-qr"><div class="rmar-spin"></div><div style="color:#999;font-size:13px">Fetching 3D model...</div></div>' +
     '<div class="rmar-steps">' +
@@ -228,48 +246,118 @@ function _rmar_openModal(productId) {
     '<div><div class="rmar-sn">2</div><div class="rmar-sl">Opens AR</div></div>' +
     '<div class="rmar-sa">&#9654;</div>' +
     '<div><div class="rmar-sn">3</div><div class="rmar-sl">Place it</div></div>' +
-    '</div>' +
-    '<a class="rmar-link" id="rmar-link" href="' + ROOMMUSE_AR_VIEWER + '" target="_blank">Or open directly on mobile &rarr;</a>' +
-    '</div>';
+    "</div>" +
+    '<a class="rmar-link" id="rmar-link" href="' +
+    ROOMMUSE_AR_VIEWER +
+    '" target="_blank">Or open directly on mobile &rarr;</a>' +
+    "</div>";
 
   document.body.appendChild(ov);
-  setTimeout(function () { ov.classList.add('show'); }, 10);
+  setTimeout(function () {
+    ov.classList.add("show");
+  }, 10);
 
   // Close
   function close() {
-    ov.classList.remove('show');
-    setTimeout(function () { if (ov.parentNode) ov.parentNode.removeChild(ov); }, 300);
+    ov.classList.remove("show");
+    setTimeout(function () {
+      if (ov.parentNode) ov.parentNode.removeChild(ov);
+    }, 300);
   }
-  ov.querySelector('.rmar-x').onclick = close;
-  ov.onclick = function (e) { if (e.target === ov) close(); };
-  var escFn = function (e) { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', escFn); } };
-  document.addEventListener('keydown', escFn);
+  ov.querySelector(".rmar-x").onclick = close;
+  ov.onclick = function (e) {
+    if (e.target === ov) close();
+  };
+  var escFn = function (e) {
+    if (e.key === "Escape") {
+      close();
+      document.removeEventListener("keydown", escFn);
+    }
+  };
+  document.addEventListener("keydown", escFn);
 
   // Fetch + QR
-  var qr = ov.querySelector('#rmar-qr');
-  var dims = ov.querySelector('#rmar-dims');
-  var link = ov.querySelector('#rmar-link');
+  var qr = ov.querySelector("#rmar-qr");
+  var dims = ov.querySelector("#rmar-dims");
+  var link = ov.querySelector("#rmar-link");
+
+  function _rmar_buildQrLink(id) {
+    try {
+      var href = window.location.href;
+      // If we're running on localhost, use the deployed domain for QR codes
+      try {
+        var cur = new URL(href);
+        if (
+          cur.hostname === "localhost" ||
+          cur.hostname === "127.0.0.1" ||
+          cur.hostname === "0.0.0.0"
+        ) {
+          href = ROOMMUSE_PUBLIC_SITE;
+        }
+      } catch (e0) {}
+
+      var u = new URL(href);
+      u.hash = "";
+      u.searchParams.set("arId", String(id));
+      return u.toString();
+    } catch (e) {
+      // Fallback if URL() fails for any reason
+      var base =
+        ROOMMUSE_PUBLIC_SITE ||
+        (window.location.origin || "") + (window.location.pathname || "/");
+      return (
+        String(base).replace(/\/?$/, "/") +
+        "?arId=" +
+        encodeURIComponent(String(id))
+      );
+    }
+  }
 
   _rmar_fetchModel(productId).then(function (item) {
     if (!ov.parentNode) return;
+    // Desktop QR: always point back to THIS site with product id
+    // (next step will be: phone reads ?arId=... and opens AR directly)
+    var qrUrl = _rmar_buildQrLink(productId);
     var arUrl;
     if (item && item.modelUrl) {
       arUrl = _rmar_arLink(item);
       if (item.dimensions && item.dimensions.length) {
-        dims.textContent = item.dimensions.length + 'm \u00D7 ' + item.dimensions.width + 'm \u00D7 ' + item.dimensions.height + 'm';
+        dims.textContent =
+          item.dimensions.length +
+          "m \u00D7 " +
+          item.dimensions.width +
+          "m \u00D7 " +
+          item.dimensions.height +
+          "m";
       }
     } else {
-      arUrl = ROOMMUSE_AR_VIEWER + '?name=' + encodeURIComponent(name);
+      arUrl = ROOMMUSE_AR_VIEWER + "?name=" + encodeURIComponent(name);
     }
+    // Keep the "open directly" link (still points to AR URL)
     link.href = arUrl;
-    qr.innerHTML = '';
-    if (typeof QRCode !== 'undefined') {
-      new QRCode(qr, { text: arUrl, width: ROOMMUSE_QR_SIZE, height: ROOMMUSE_QR_SIZE, colorDark: '#233B3D', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.H });
+    qr.innerHTML = "";
+    if (typeof QRCode !== "undefined") {
+      new QRCode(qr, {
+        text: qrUrl,
+        width: ROOMMUSE_QR_SIZE,
+        height: ROOMMUSE_QR_SIZE,
+        colorDark: "#233B3D",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H,
+      });
     } else {
-      qr.innerHTML = '<a href="' + arUrl + '" target="_blank" style="word-break:break-all;color:#2e7d32">' + arUrl + '</a>';
+      qr.innerHTML =
+        '<a href="' +
+        qrUrl +
+        '" target="_blank" style="word-break:break-all;color:#2e7d32">' +
+        qrUrl +
+        "</a>";
     }
     if (!item || !item.modelUrl) {
-      qr.insertAdjacentHTML('afterend', '<p class="rmar-note">3D model not generated yet. Make sure the CSV was uploaded to the backend.</p>');
+      qr.insertAdjacentHTML(
+        "afterend",
+        '<p class="rmar-note">3D model not generated yet. Make sure the CSV was uploaded to the backend.</p>',
+      );
     }
   });
 }
@@ -278,34 +366,34 @@ function _rmar_openModal(productId) {
 // FLOATING AR ICONS ON PRODUCT CARD IMAGES
 // ══════════════════════════════════════════════════════════════
 function _rmar_addFloatingIcons() {
-  var cards = document.querySelectorAll('.product-card');
+  var cards = document.querySelectorAll(".product-card");
   cards.forEach(function (card) {
     // Skip if we already added an icon to this card
-    if (card.querySelector('.rmar-float-icon')) return;
+    if (card.querySelector(".rmar-float-icon")) return;
 
-    var img = card.querySelector('img.product-image');
+    var img = card.querySelector("img.product-image");
     if (!img) return;
 
     // Get the product ID from the AR button in this card
-    var arBtn = card.querySelector('.view-ar');
+    var arBtn = card.querySelector(".view-ar");
     if (!arBtn) return;
-    var id = arBtn.getAttribute('data-id');
+    var id = arBtn.getAttribute("data-id");
     if (!id) return;
 
     // Wrap the image in a relative container
-    var wrap = document.createElement('div');
-    wrap.className = 'rmar-img-wrap';
+    var wrap = document.createElement("div");
+    wrap.className = "rmar-img-wrap";
     img.parentNode.insertBefore(wrap, img);
     wrap.appendChild(img);
 
     // Create floating icon button
-    var icon = document.createElement('button');
-    icon.className = 'rmar-float-icon';
-    icon.title = 'View in AR';
+    var icon = document.createElement("button");
+    icon.className = "rmar-float-icon";
+    icon.title = "View in AR";
     icon.innerHTML = AR_CUBE_SVG;
-    icon.addEventListener('click', function (e) {
+    icon.addEventListener("click", function (e) {
       e.stopPropagation();
-      console.log('[RoomMuse] Float icon clicked, id:', id);
+      console.log("[RoomMuse] Float icon clicked, id:", id);
       _rmar_openModal(id);
     });
 
@@ -317,26 +405,26 @@ function _rmar_addFloatingIcons() {
 // FLOATING AR ICON ON PRODUCT DETAIL MODAL IMAGE
 // ══════════════════════════════════════════════════════════════
 function _rmar_patchModalImage() {
-  var modalImg = document.getElementById('modal-product-image');
+  var modalImg = document.getElementById("modal-product-image");
   if (!modalImg) return;
   // Only wrap once
-  if (modalImg.parentNode.classList.contains('rmar-modal-img-wrap')) return;
+  if (modalImg.parentNode.classList.contains("rmar-modal-img-wrap")) return;
 
-  var wrap = document.createElement('div');
-  wrap.className = 'rmar-modal-img-wrap';
+  var wrap = document.createElement("div");
+  wrap.className = "rmar-modal-img-wrap";
   modalImg.parentNode.insertBefore(wrap, modalImg);
   wrap.appendChild(modalImg);
 
   // Create the floating icon (we'll update its ID when modal opens)
-  var icon = document.createElement('button');
-  icon.className = 'rmar-modal-float-icon';
-  icon.id = 'rmar-modal-float-btn';
-  icon.title = 'View in AR';
+  var icon = document.createElement("button");
+  icon.className = "rmar-modal-float-icon";
+  icon.id = "rmar-modal-float-btn";
+  icon.title = "View in AR";
   icon.innerHTML = AR_CUBE_SVG;
-  icon.addEventListener('click', function () {
-    var arBtn = document.getElementById('modal-view-ar');
-    var id = arBtn ? arBtn.getAttribute('data-id') : null;
-    console.log('[RoomMuse] Modal float icon clicked, id:', id);
+  icon.addEventListener("click", function () {
+    var arBtn = document.getElementById("modal-view-ar");
+    var id = arBtn ? arBtn.getAttribute("data-id") : null;
+    console.log("[RoomMuse] Modal float icon clicked, id:", id);
     if (id) _rmar_openModal(id);
   });
   wrap.appendChild(icon);
@@ -346,7 +434,7 @@ function _rmar_patchModalImage() {
 // OVERRIDE #1: Replace openArView (called by main.js)
 // ══════════════════════════════════════════════════════════════
 window.openArView = function (productId) {
-  console.log('[RoomMuse] openArView called with:', productId);
+  console.log("[RoomMuse] openArView called with:", productId);
   _rmar_openModal(String(productId));
 };
 
@@ -355,21 +443,21 @@ window.openArView = function (productId) {
 // Fixes parseInt(uuid) bug AND adds floating icons on images.
 // ══════════════════════════════════════════════════════════════
 window.attachViewButtons = function () {
-  console.log('[RoomMuse] attachViewButtons patched');
+  console.log("[RoomMuse] attachViewButtons patched");
 
   // View product buttons (keep original behavior)
-  document.querySelectorAll('.view-product').forEach(function (btn) {
-    btn.addEventListener('click', function (e) {
-      var id = e.target.getAttribute('data-id');
-      if (typeof openProductModal === 'function') openProductModal(id);
+  document.querySelectorAll(".view-product").forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      var id = e.target.getAttribute("data-id");
+      if (typeof openProductModal === "function") openProductModal(id);
     });
   });
 
   // AR buttons — use string ID, not parseInt
-  document.querySelectorAll('.view-ar').forEach(function (btn) {
-    btn.addEventListener('click', function (e) {
-      var id = e.target.getAttribute('data-id');
-      console.log('[RoomMuse] AR button clicked, id:', id);
+  document.querySelectorAll(".view-ar").forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      var id = e.target.getAttribute("data-id");
+      console.log("[RoomMuse] AR button clicked, id:", id);
       if (id) _rmar_openModal(id);
     });
   });
@@ -378,15 +466,186 @@ window.attachViewButtons = function () {
   _rmar_addFloatingIcons();
 };
 
+// ══════════════════════════════════════════════════════════════
+// PHONE DEEP LINK: if ?arId=... then fetch model + auto-open 3D/AR
+// ══════════════════════════════════════════════════════════════
+(function rmarHandleDeepLink() {
+  function run() {
+    try {
+      if (typeof window === "undefined" || typeof document === "undefined")
+        return;
+
+      var params = new URLSearchParams(window.location.search || "");
+      var arId = params.get("arId") || params.get("id") || params.get("ar_id");
+      if (!arId) return;
+
+      var ua = navigator.userAgent || "";
+      var isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+      // Fallback patterns (used only if backend doesn't return URLs)
+      var STORAGE_BASE =
+        "https://storage.googleapis.com/ec-design-a9bbb.firebasestorage.app";
+      function fallbackUsdzUrl(id) {
+        return (
+          STORAGE_BASE + "/models/" + encodeURIComponent(String(id)) + ".usdz"
+        );
+      }
+      function fallbackImageUrl(id) {
+        return (
+          STORAGE_BASE + "/images/" + encodeURIComponent(String(id)) + ".png"
+        );
+      }
+
+      function resolveUsdz(url) {
+        if (!url) return null;
+        var u = String(url).trim();
+        if (!u) return null;
+        // direct .usdz
+        if (u.toLowerCase().endsWith(".usdz")) return u.split("#")[0];
+        // viewer URL with ?model=<...usdz>
+        try {
+          var parsed = new URL(u);
+          var m = parsed.searchParams.get("model");
+          if (m && String(m).toLowerCase().endsWith(".usdz"))
+            return String(m).split("#")[0];
+        } catch (e) {}
+        // best-effort: slice up to .usdz
+        var idx = u.toLowerCase().indexOf(".usdz");
+        if (idx !== -1) return u.slice(0, idx + 5).split("#")[0];
+        return null;
+      }
+
+      function ensureBanner(text) {
+        var b = document.getElementById("rmar-deeplink-banner");
+        if (!b) {
+          b = document.createElement("div");
+          b.id = "rmar-deeplink-banner";
+          b.style.cssText =
+            "position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0b0b12;color:#fff;z-index:999999;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:16px;text-align:center;padding:24px;";
+          document.body.appendChild(b);
+        }
+        b.textContent = text;
+        return b;
+      }
+
+      function openOnIOS(opts) {
+        var href =
+          String(opts.usdzUrl || "").split("#")[0] + "#allowsContentScaling=0";
+        var title = opts.name || "View in AR";
+        var imageUrl =
+          opts.imageUrl ||
+          "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
+
+        // Build exactly: <a rel="ar" href="...usdz#allowsContentScaling=0"><img ... src="...png"></a>
+        var a = document.createElement("a");
+        a.id = "rmar-deeplink-ar";
+        a.setAttribute("rel", "ar");
+        a.href = href;
+
+        var img = document.createElement("img");
+        img.alt = title;
+        img.className = "page-module_E0kJGG_cardImage";
+        img.src = imageUrl;
+        a.appendChild(img);
+
+        // Keep it in DOM but invisible
+        a.style.position = "fixed";
+        a.style.left = "-9999px";
+        a.style.top = "-9999px";
+        document.body.appendChild(a);
+
+        // Also show a visible fallback button in the banner in case auto-open is blocked
+        var banner = document.getElementById("rmar-deeplink-banner");
+        if (banner && !document.getElementById("rmar-deeplink-visible-btn")) {
+          var btn = document.createElement("button");
+          btn.id = "rmar-deeplink-visible-btn";
+          btn.textContent = "Open in AR";
+          btn.style.cssText =
+            "margin-top:12px;padding:10px 18px;border-radius:999px;border:none;background:#ffffff;color:#0b0b12;font-weight:600;font-size:15px;";
+          btn.onclick = function () {
+            try {
+              a.click();
+            } catch (e) {
+              window.location.href = href;
+            }
+          };
+          // clear banner text and add button below short label
+          banner.textContent = "Ready to view in AR.";
+          banner.appendChild(document.createElement("br"));
+          banner.appendChild(btn);
+        }
+
+        // Attempt "auto tap", then fallback to navigation
+        setTimeout(function () {
+          try {
+            a.click();
+          } catch (e) {}
+          setTimeout(function () {
+            try {
+              window.location.href = href;
+            } catch (e2) {}
+          }, 250);
+        }, 50);
+      }
+
+      function openNonIOS(url) {
+        // Best-effort: open the resolved URL directly
+        try {
+          window.location.href = url;
+        } catch (e) {}
+      }
+
+      ensureBanner("Opening 3D/AR…");
+
+      _rmar_fetchModel(String(arId)).then(function (item) {
+        var banner = document.getElementById("rmar-deeplink-banner");
+        var usdz =
+          resolveUsdz(item && item.modelUrl) ||
+          resolveUsdz(item && item.usdzUrl) ||
+          (item && item.directUsdzUrl
+            ? String(item.directUsdzUrl).split("#")[0]
+            : null) ||
+          fallbackUsdzUrl(arId);
+        if (!usdz) {
+          if (banner)
+            banner.textContent = "3D model not available for this item.";
+          return;
+        }
+
+        var name = (item && (item.name || item.item_name)) || "Furniture";
+        var imageUrl =
+          (item && (item.imageUrl || item.thumbnailUrl || item.image)) ||
+          fallbackImageUrl(arId);
+
+        if (isIOS) openOnIOS({ usdzUrl: usdz, imageUrl: imageUrl, name: name });
+        else openNonIOS(usdz);
+
+        setTimeout(function () {
+          if (banner && banner.parentNode)
+            banner.parentNode.removeChild(banner);
+        }, 1500);
+      });
+    } catch (e) {
+      // best-effort only
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run);
+  } else {
+    run();
+  }
+})();
+
 // ── Patch the modal AR button ───────────────────────────────
 (function patchModalArButton() {
-  var btn = document.getElementById('modal-view-ar');
+  var btn = document.getElementById("modal-view-ar");
   if (!btn) return;
   var newBtn = btn.cloneNode(true);
   btn.parentNode.replaceChild(newBtn, btn);
-  newBtn.addEventListener('click', function () {
-    var id = newBtn.getAttribute('data-id');
-    console.log('[RoomMuse] Modal AR button clicked, id:', id);
+  newBtn.addEventListener("click", function () {
+    var id = newBtn.getAttribute("data-id");
+    console.log("[RoomMuse] Modal AR button clicked, id:", id);
     if (id) _rmar_openModal(id);
   });
 })();
@@ -395,12 +654,18 @@ window.attachViewButtons = function () {
 _rmar_patchModalImage();
 
 // ── Re-bind for already-rendered products ───────────────────
-if (document.querySelectorAll('.view-ar').length > 0) {
+if (document.querySelectorAll(".view-ar").length > 0) {
   attachViewButtons();
 }
 
 // ── Done ────────────────────────────────────────────────────
-console.log('%c\u2713 RoomMuse AR overlay active', 'color:#2e7d32;font-weight:600');
-console.log('  Backend:', ROOMMUSE_API);
-console.log('  AR Viewer:', ROOMMUSE_AR_VIEWER);
-console.log('  Products found:', typeof products !== 'undefined' ? products.length : '?');
+console.log(
+  "%c\u2713 RoomMuse AR overlay active",
+  "color:#2e7d32;font-weight:600",
+);
+console.log("  Backend:", ROOMMUSE_API);
+console.log("  AR Viewer:", ROOMMUSE_AR_VIEWER);
+console.log(
+  "  Products found:",
+  typeof products !== "undefined" ? products.length : "?",
+);
