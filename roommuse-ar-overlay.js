@@ -554,38 +554,34 @@ window.attachViewButtons = function () {
         a.style.top = "-9999px";
         document.body.appendChild(a);
 
-        // Also show a visible fallback button in the banner in case auto-open is blocked
+        // Show a prominent tap button immediately.
+        // We do NOT auto-click or fall back to window.location.href — both would
+        // trigger Safari's "View 3D object?" confirmation dialog.
+        // A real user tap on the rel="ar" anchor opens AR Quick Look directly with no dialog.
         var banner = document.getElementById("rmar-deeplink-banner");
         if (banner && !document.getElementById("rmar-deeplink-visible-btn")) {
           var btn = document.createElement("button");
           btn.id = "rmar-deeplink-visible-btn";
           btn.textContent = "Open in AR";
           btn.style.cssText =
-            "margin-top:12px;padding:10px 18px;border-radius:999px;border:none;background:#ffffff;color:#0b0b12;font-weight:600;font-size:15px;";
+            "margin-top:20px;padding:16px 36px;border-radius:999px;border:none;" +
+            "background:#ffffff;color:#0b0b12;font-weight:700;font-size:18px;" +
+            "cursor:pointer;box-shadow:0 4px 24px rgba(0,0,0,.35);";
           btn.onclick = function () {
-            try {
-              a.click();
-            } catch (e) {
-              window.location.href = href;
-            }
+            a.click();
           };
-          // clear banner text and add button below short label
-          banner.textContent = "Ready to view in AR.";
+          banner.innerHTML = "";
+          var label = document.createElement("div");
+          label.textContent = title + " is ready to view in AR.";
+          label.style.cssText = "font-size:17px;font-weight:600;margin-bottom:4px;";
+          var sub = document.createElement("div");
+          sub.textContent = "Tap the button below to open.";
+          sub.style.cssText = "font-size:14px;color:rgba(255,255,255,.6);margin-bottom:0;";
+          banner.appendChild(label);
+          banner.appendChild(sub);
           banner.appendChild(document.createElement("br"));
           banner.appendChild(btn);
         }
-
-        // Attempt "auto tap", then fallback to navigation
-        setTimeout(function () {
-          try {
-            a.click();
-          } catch (e) {}
-          setTimeout(function () {
-            try {
-              window.location.href = href;
-            } catch (e2) {}
-          }, 250);
-        }, 50);
       }
 
       function openNonIOS(url) {
@@ -617,13 +613,16 @@ window.attachViewButtons = function () {
           (item && (item.imageUrl || item.thumbnailUrl || item.image)) ||
           fallbackImageUrl(arId);
 
-        if (isIOS) openOnIOS({ usdzUrl: usdz, imageUrl: imageUrl, name: name });
-        else openNonIOS(usdz);
-
-        setTimeout(function () {
-          if (banner && banner.parentNode)
-            banner.parentNode.removeChild(banner);
-        }, 1500);
+        if (isIOS) {
+          openOnIOS({ usdzUrl: usdz, imageUrl: imageUrl, name: name });
+          // Banner stays visible so the user can tap "Open in AR"
+        } else {
+          openNonIOS(usdz);
+          setTimeout(function () {
+            if (banner && banner.parentNode)
+              banner.parentNode.removeChild(banner);
+          }, 1500);
+        }
       });
     } catch (e) {
       // best-effort only
