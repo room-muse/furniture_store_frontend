@@ -11,7 +11,6 @@
 
 // ── Config ──────────────────────────────────────────────────
 var ROOMMUSE_API = "https://ar-backend-563656133641.us-central1.run.app";
-var ROOMMUSE_AR_VIEWER = "https://ec-design.vercel.app";
 // When testing on localhost, QR should point to a phone-reachable URL.
 // Set this to your deployed site; local QR generation will use it.
 var ROOMMUSE_PUBLIC_SITE = "https://furniture-store-frontend-sooty.vercel.app/";
@@ -96,11 +95,6 @@ var AR_CUBE_SVG_LG =
     "}",
     ".rmar-sl { font-size:11px; color:#6b6b80; }",
     ".rmar-sa { color:#ccc; }",
-    ".rmar-link {",
-    "  display:inline-block; font-size:13px; color:#2e7d32;",
-    "  text-decoration:none; padding:8px 16px; border-radius:8px;",
-    "}",
-    ".rmar-link:hover { background:#e8f5e9; }",
     ".rmar-note { font-size:12px; color:#999; margin-top:8px; line-height:1.5; }",
 
     /* ── Floating AR icon on product cards ── */
@@ -189,23 +183,6 @@ function _rmar_fetchModel(itemId) {
     });
 }
 
-// ── Build AR link ───────────────────────────────────────────
-function _rmar_arLink(item) {
-  if (!item || !item.modelUrl) return ROOMMUSE_AR_VIEWER;
-  var p = new URLSearchParams({
-    model: item.modelUrl,
-    name: item.name,
-    type: item.category,
-  });
-  var dim = item.dimensions;
-  if (dim && dim.length) {
-    p.set("length", dim.length);
-    p.set("width", dim.width);
-    p.set("height", dim.height);
-  }
-  return item.modelUrl;
-}
-
 // ══════════════════════════════════════════════════════════════
 // THE QR CODE MODAL
 // ══════════════════════════════════════════════════════════════
@@ -247,9 +224,6 @@ function _rmar_openModal(productId) {
     '<div class="rmar-sa">&#9654;</div>' +
     '<div><div class="rmar-sn">3</div><div class="rmar-sl">Place it</div></div>' +
     "</div>" +
-    '<a class="rmar-link" id="rmar-link" href="' +
-    ROOMMUSE_AR_VIEWER +
-    '" target="_blank">Or open directly on mobile &rarr;</a>' +
     "</div>";
 
   document.body.appendChild(ov);
@@ -279,7 +253,6 @@ function _rmar_openModal(productId) {
   // Fetch + QR
   var qr = ov.querySelector("#rmar-qr");
   var dims = ov.querySelector("#rmar-dims");
-  var link = ov.querySelector("#rmar-link");
 
   function _rmar_buildQrLink(id) {
     try {
@@ -315,26 +288,16 @@ function _rmar_openModal(productId) {
 
   _rmar_fetchModel(productId).then(function (item) {
     if (!ov.parentNode) return;
-    // Desktop QR: always point back to THIS site with product id
-    // (next step will be: phone reads ?arId=... and opens AR directly)
     var qrUrl = _rmar_buildQrLink(productId);
-    var arUrl;
-    if (item && item.modelUrl) {
-      arUrl = _rmar_arLink(item);
-      if (item.dimensions && item.dimensions.length) {
-        dims.textContent =
-          item.dimensions.length +
-          "m \u00D7 " +
-          item.dimensions.width +
-          "m \u00D7 " +
-          item.dimensions.height +
-          "m";
-      }
-    } else {
-      arUrl = ROOMMUSE_AR_VIEWER + "?name=" + encodeURIComponent(name);
+    if (item && item.dimensions && item.dimensions.length) {
+      dims.textContent =
+        item.dimensions.length +
+        "m \u00D7 " +
+        item.dimensions.width +
+        "m \u00D7 " +
+        item.dimensions.height +
+        "m";
     }
-    // Keep the "open directly" link (still points to AR URL)
-    link.href = arUrl;
     qr.innerHTML = "";
     if (typeof QRCode !== "undefined") {
       new QRCode(qr, {
@@ -489,12 +452,13 @@ window.attachViewButtons = function () {
     }
 
     _rmar_fetchModel(String(arId)).then(function (item) {
-      var usdz = resolveUsdz(item && item.modelUrl) ||
-                 resolveUsdz(item && item.usdzUrl);
+      var usdz =
+        resolveUsdz(item && item.modelUrl) || resolveUsdz(item && item.usdzUrl);
       if (!usdz) return;
 
       var href = usdz + "#allowsContentScaling=0";
-      var imageUrl = (item && (item.imageUrl || item.thumbnailUrl || item.image)) || "";
+      var imageUrl =
+        (item && (item.imageUrl || item.thumbnailUrl || item.image)) || "";
 
       // Add <a rel="ar"><img></a> to the DOM
       var a = document.createElement("a");
@@ -508,7 +472,9 @@ window.attachViewButtons = function () {
       document.body.appendChild(a);
 
       // Auto-tap
-      setTimeout(function () { a.click(); }, 100);
+      setTimeout(function () {
+        a.click();
+      }, 100);
     });
   }
 
@@ -546,7 +512,6 @@ console.log(
   "color:#2e7d32;font-weight:600",
 );
 console.log("  Backend:", ROOMMUSE_API);
-console.log("  AR Viewer:", ROOMMUSE_AR_VIEWER);
 console.log(
   "  Products found:",
   typeof products !== "undefined" ? products.length : "?",
