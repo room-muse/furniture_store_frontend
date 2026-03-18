@@ -467,166 +467,49 @@ window.attachViewButtons = function () {
 };
 
 // ══════════════════════════════════════════════════════════════
-// PHONE DEEP LINK: if ?arId=... then fetch model + auto-open 3D/AR
+// PHONE DEEP LINK: if ?arId=... then fetch model + auto-open AR
 // ══════════════════════════════════════════════════════════════
 (function rmarHandleDeepLink() {
   function run() {
-    try {
-      if (typeof window === "undefined" || typeof document === "undefined")
-        return;
+    var params = new URLSearchParams(window.location.search || "");
+    var arId = params.get("arId") || params.get("id") || params.get("ar_id");
+    if (!arId) return;
 
-      var params = new URLSearchParams(window.location.search || "");
-      var arId = params.get("arId") || params.get("id") || params.get("ar_id");
-      if (!arId) return;
-
-      var ua = navigator.userAgent || "";
-      var isIOS = /iPhone|iPad|iPod/i.test(ua);
-
-      // Fallback patterns (used only if backend doesn't return URLs)
-      var STORAGE_BASE =
-        "https://storage.googleapis.com/ec-design-a9bbb.firebasestorage.app";
-      function fallbackUsdzUrl(id) {
-        return (
-          STORAGE_BASE + "/models/" + encodeURIComponent(String(id)) + ".usdz"
-        );
-      }
-      function fallbackImageUrl(id) {
-        return (
-          STORAGE_BASE + "/images/" + encodeURIComponent(String(id)) + ".png"
-        );
-      }
-
-      function resolveUsdz(url) {
-        if (!url) return null;
-        var u = String(url).trim();
-        if (!u) return null;
-        // direct .usdz
-        if (u.toLowerCase().endsWith(".usdz")) return u.split("#")[0];
-        // viewer URL with ?model=<...usdz>
-        try {
-          var parsed = new URL(u);
-          var m = parsed.searchParams.get("model");
-          if (m && String(m).toLowerCase().endsWith(".usdz"))
-            return String(m).split("#")[0];
-        } catch (e) {}
-        // best-effort: slice up to .usdz
-        var idx = u.toLowerCase().indexOf(".usdz");
-        if (idx !== -1) return u.slice(0, idx + 5).split("#")[0];
-        return null;
-      }
-
-      function ensureBanner(text) {
-        var b = document.getElementById("rmar-deeplink-banner");
-        if (!b) {
-          b = document.createElement("div");
-          b.id = "rmar-deeplink-banner";
-          b.style.cssText =
-            "position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0b0b12;color:#fff;z-index:999999;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:16px;text-align:center;padding:24px;";
-          document.body.appendChild(b);
-        }
-        b.textContent = text;
-        return b;
-      }
-
-      function openOnIOS(opts) {
-        var href =
-          String(opts.usdzUrl || "").split("#")[0] + "#allowsContentScaling=0";
-        var title = opts.name || "View in AR";
-        var imageUrl =
-          opts.imageUrl ||
-          "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
-
-        // Build exactly: <a rel="ar" href="...usdz#allowsContentScaling=0"><img ... src="...png"></a>
-        var a = document.createElement("a");
-        a.id = "rmar-deeplink-ar";
-        a.setAttribute("rel", "ar");
-        a.href = href;
-
-        var img = document.createElement("img");
-        img.alt = title;
-        img.className = "page-module_E0kJGG_cardImage";
-        img.src = imageUrl;
-        a.appendChild(img);
-
-        // Keep it in DOM but invisible
-        a.style.position = "fixed";
-        a.style.left = "-9999px";
-        a.style.top = "-9999px";
-        document.body.appendChild(a);
-
-        // Show a prominent tap button immediately.
-        // We do NOT auto-click or fall back to window.location.href — both would
-        // trigger Safari's "View 3D object?" confirmation dialog.
-        // A real user tap on the rel="ar" anchor opens AR Quick Look directly with no dialog.
-        var banner = document.getElementById("rmar-deeplink-banner");
-        if (banner && !document.getElementById("rmar-deeplink-visible-btn")) {
-          var btn = document.createElement("button");
-          btn.id = "rmar-deeplink-visible-btn";
-          btn.textContent = "Open in AR";
-          btn.style.cssText =
-            "margin-top:20px;padding:16px 36px;border-radius:999px;border:none;" +
-            "background:#ffffff;color:#0b0b12;font-weight:700;font-size:18px;" +
-            "cursor:pointer;box-shadow:0 4px 24px rgba(0,0,0,.35);";
-          btn.onclick = function () {
-            a.click();
-          };
-          banner.innerHTML = "";
-          var label = document.createElement("div");
-          label.textContent = title + " is ready to view in AR.";
-          label.style.cssText = "font-size:17px;font-weight:600;margin-bottom:4px;";
-          var sub = document.createElement("div");
-          sub.textContent = "Tap the button below to open.";
-          sub.style.cssText = "font-size:14px;color:rgba(255,255,255,.6);margin-bottom:0;";
-          banner.appendChild(label);
-          banner.appendChild(sub);
-          banner.appendChild(document.createElement("br"));
-          banner.appendChild(btn);
-        }
-      }
-
-      function openNonIOS(url) {
-        // Best-effort: open the resolved URL directly
-        try {
-          window.location.href = url;
-        } catch (e) {}
-      }
-
-      ensureBanner("Opening 3D/AR…");
-
-      _rmar_fetchModel(String(arId)).then(function (item) {
-        var banner = document.getElementById("rmar-deeplink-banner");
-        var usdz =
-          resolveUsdz(item && item.modelUrl) ||
-          resolveUsdz(item && item.usdzUrl) ||
-          (item && item.directUsdzUrl
-            ? String(item.directUsdzUrl).split("#")[0]
-            : null) ||
-          fallbackUsdzUrl(arId);
-        if (!usdz) {
-          if (banner)
-            banner.textContent = "3D model not available for this item.";
-          return;
-        }
-
-        var name = (item && (item.name || item.item_name)) || "Furniture";
-        var imageUrl =
-          (item && (item.imageUrl || item.thumbnailUrl || item.image)) ||
-          fallbackImageUrl(arId);
-
-        if (isIOS) {
-          openOnIOS({ usdzUrl: usdz, imageUrl: imageUrl, name: name });
-          // Banner stays visible so the user can tap "Open in AR"
-        } else {
-          openNonIOS(usdz);
-          setTimeout(function () {
-            if (banner && banner.parentNode)
-              banner.parentNode.removeChild(banner);
-          }, 1500);
-        }
-      });
-    } catch (e) {
-      // best-effort only
+    function resolveUsdz(url) {
+      if (!url) return null;
+      var u = String(url).trim();
+      if (u.toLowerCase().endsWith(".usdz")) return u.split("#")[0];
+      try {
+        var m = new URL(u).searchParams.get("model");
+        if (m && m.toLowerCase().endsWith(".usdz")) return m.split("#")[0];
+      } catch (e) {}
+      var idx = u.toLowerCase().indexOf(".usdz");
+      if (idx !== -1) return u.slice(0, idx + 5).split("#")[0];
+      return null;
     }
+
+    _rmar_fetchModel(String(arId)).then(function (item) {
+      var usdz = resolveUsdz(item && item.modelUrl) ||
+                 resolveUsdz(item && item.usdzUrl);
+      if (!usdz) return;
+
+      var href = usdz + "#allowsContentScaling=0";
+      var imageUrl = (item && (item.imageUrl || item.thumbnailUrl || item.image)) || "";
+
+      // Add <a rel="ar"><img></a> to the DOM
+      var a = document.createElement("a");
+      a.setAttribute("rel", "ar");
+      a.href = href;
+      a.style.cssText = "position:fixed;left:-9999px;top:-9999px;";
+      var img = document.createElement("img");
+      img.src = imageUrl;
+      img.alt = (item && item.name) || "AR";
+      a.appendChild(img);
+      document.body.appendChild(a);
+
+      // Auto-tap
+      setTimeout(function () { a.click(); }, 100);
+    });
   }
 
   if (document.readyState === "loading") {
