@@ -11,9 +11,6 @@
 
 // ── Config ──────────────────────────────────────────────────
 var ROOMMUSE_API = "https://ar-backend-563656133641.us-central1.run.app";
-// When testing on localhost, QR should point to a phone-reachable URL.
-// Set this to your deployed site; local QR generation will use it.
-var ROOMMUSE_PUBLIC_SITE = "https://furniture-store-frontend-sooty.vercel.app/";
 var ROOMMUSE_QR_SIZE = 260;
 var _roommuse_cache = {};
 
@@ -257,18 +254,6 @@ function _rmar_openModal(productId) {
   function _rmar_buildQrLink(id) {
     try {
       var href = window.location.href;
-      // If we're running on localhost, use the deployed domain for QR codes
-      try {
-        var cur = new URL(href);
-        if (
-          cur.hostname === "localhost" ||
-          cur.hostname === "127.0.0.1" ||
-          cur.hostname === "0.0.0.0"
-        ) {
-          href = ROOMMUSE_PUBLIC_SITE;
-        }
-      } catch (e0) {}
-
       var u = new URL(href);
       u.hash = "";
       u.searchParams.set("arId", String(id));
@@ -276,7 +261,6 @@ function _rmar_openModal(productId) {
     } catch (e) {
       // Fallback if URL() fails for any reason
       var base =
-        ROOMMUSE_PUBLIC_SITE ||
         (window.location.origin || "") + (window.location.pathname || "/");
       return (
         String(base).replace(/\/?$/, "/") +
