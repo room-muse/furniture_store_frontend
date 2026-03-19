@@ -255,7 +255,7 @@ function openProductModal(productId) {
     .getElementById("modal-add-to-cart")
     .setAttribute("data-id", product.id);
   const modalArBtn = document.getElementById("modal-view-ar");
-  if (modalArBtn) modalArBtn.setAttribute("data-id", product.id);
+  if (modalArBtn) modalArBtn.setAttribute("data-rm-id", product.id);
   document.getElementById("product-modal").style.display = "flex";
 }
 
