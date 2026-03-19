@@ -1,4 +1,7 @@
 (function () {
+
+  var API = "https://ar-backend-563656133641.us-central1.run.app";
+
   function loadQRLib(cb) {
     if (typeof QRCode !== "undefined") return cb();
     var s = document.createElement("script");
@@ -40,12 +43,47 @@
       ov.onclick = function (e) { if (e.target === ov) close(); };
     });
   }
+
+  // ── Deep link handler ──
+  function handleDeepLink() {
+    var params = new URLSearchParams(window.location.search);
+    var id = params.get("rm_arId");
+    if (!id) return;
+
+    fetch(API + "/items/" + encodeURIComponent(id))
+      .then(function (r) {
+        if (!r.ok) throw new Error("Failed to fetch item: " + r.status);
+        return r.json();
+      })
+      .then(function (item) {
+        console.log("[RoomMuse] item fetched:", item);
+        if (!item.usdzUrl) return;
+      
+        var a = document.createElement("a");
+        a.setAttribute("rel", "ar");
+        a.href = item.usdzUrl;
+        a.style.cssText = "position:fixed;left:-9999px;top:-9999px;";
+      
+        var img = document.createElement("img");
+        img.src = item.imageUrl || "";
+        a.appendChild(img);
+      
+        document.body.appendChild(a);
+        a.click();
+      })
+      .catch(function (e) {
+        console.warn("[RoomMuse] deep link fetch failed:", e);
+      });
+  }
+
   function init() {
     document.querySelectorAll("[data-rm-id]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         openModal(btn.getAttribute("data-rm-id"));
       });
     });
+
+    handleDeepLink();
   }
 
   if (document.readyState === "loading") {
@@ -53,4 +91,6 @@
   } else {
     init();
   }
+
+  window.RoomMuse = { open: openModal };
 })();
