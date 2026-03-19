@@ -76,12 +76,29 @@
       });
   }
 
+  function attachBtn(btn) {
+    btn.addEventListener("click", function () {
+      openModal(btn.getAttribute("data-rm-id"));
+    });
+  }
+
   function init() {
-    document.querySelectorAll("[data-rm-id]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        openModal(btn.getAttribute("data-rm-id"));
+    document.querySelectorAll("[data-rm-id]").forEach(attachBtn);
+
+      // watch for new ones
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        mutation.addedNodes.forEach(function (node) {
+          if (node.nodeType !== 1) return; // skip non-elements
+          // check if the node itself matches
+          if (node.matches("[data-rm-id]")) attachBtn(node);
+          // check descendants
+          node.querySelectorAll("[data-rm-id]").forEach(attachBtn);
+        });
       });
     });
+
+  observer.observe(document.body, { childList: true, subtree: true });
 
     handleDeepLink();
   }
