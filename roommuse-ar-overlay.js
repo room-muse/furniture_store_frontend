@@ -253,7 +253,7 @@ function _rmar_openModal(productId) {
       var href = window.location.href;
       var u = new URL(href);
       u.hash = "";
-      u.searchParams.set("arId", String(id));
+      u.searchParams.set("rmar_arId", String(id));
       return u.toString();
     } catch (e) {
       // Fallback if URL() fails for any reason
@@ -261,7 +261,7 @@ function _rmar_openModal(productId) {
         (window.location.origin || "") + (window.location.pathname || "/");
       return (
         String(base).replace(/\/?$/, "/") +
-        "?arId=" +
+        "?rmar_arId=" +
         encodeURIComponent(String(id))
       );
     }
@@ -411,12 +411,12 @@ window.attachViewButtons = function () {
 };
 
 // ══════════════════════════════════════════════════════════════
-// PHONE DEEP LINK: if ?arId=... then fetch model + auto-open AR
+// PHONE DEEP LINK: if ?rmar_arId=... then fetch model + auto-open AR
 // ══════════════════════════════════════════════════════════════
 (function rmarHandleDeepLink() {
   function run() {
     var params = new URLSearchParams(window.location.search || "");
-    var arId = params.get("arId") || params.get("id") || params.get("ar_id");
+    var arId = params.get("rmar_arId");
     if (!arId) return;
 
     _rmar_fetchModel(String(arId)).then(function (item) {
