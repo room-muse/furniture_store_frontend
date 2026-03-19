@@ -1,3 +1,13 @@
+/**
+ * RoomMuse AR Overlay — QR modal for 3D/AR
+ *
+ * How to use:
+ * 1. Add the script tag to your HTML (e.g. after main.js):
+ *    <script src="roommuse-ar-overlay.js"></script>
+ * 2. On the button that should open the AR/QR flow, add the attribute data-rm-id
+ *    and set its value to the product's id:
+ *    <button data-rm-id="${product.id}">3D/AR</button>
+ */
 (function () {
 
   var API = "https://ar-backend-563656133641.us-central1.run.app";
