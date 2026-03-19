@@ -387,8 +387,6 @@ window.openArView = function (productId) {
 // Fixes parseInt(uuid) bug AND adds floating icons on images.
 // ══════════════════════════════════════════════════════════════
 window.attachViewButtons = function () {
-  console.log("[RoomMuse] attachViewButtons patched");
-
   // View product buttons (keep original behavior)
   document.querySelectorAll(".view-product").forEach(function (btn) {
     btn.addEventListener("click", function (e) {
@@ -476,9 +474,4 @@ if (document.querySelectorAll(".view-ar").length > 0) {
 console.log(
   "%c\u2713 RoomMuse AR overlay active",
   "color:#2e7d32;font-weight:600",
-);
-console.log("  Backend:", ROOMMUSE_API);
-console.log(
-  "  Products found:",
-  typeof products !== "undefined" ? products.length : "?",
 );
