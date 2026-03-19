@@ -185,7 +185,7 @@ function renderProducts(list) {
             <button onclick="addToCart('${product.id}')" class="add-to-cart btn-primary">Add to Cart</button>
             <div class="product-actions">
                 <button class="view-product btn-primary" data-id="${product.id}">View</button>
-                <button class="view-ar btn-ar" data-id="${product.id}">3D/AR</button>
+                <button class="view-ar btn-ar" data-rm-id="${product.id}">3D/AR</button>
             </div>
         `;
     container.appendChild(item);
