@@ -375,40 +375,6 @@ function _rmar_patchModalImage() {
 }
 
 // ══════════════════════════════════════════════════════════════
-// OVERRIDE #1: Replace openArView (called by main.js)
-// ══════════════════════════════════════════════════════════════
-window.openArView = function (productId) {
-  console.log("[RoomMuse] openArView called with:", productId);
-  _rmar_openModal(String(productId));
-};
-
-// ══════════════════════════════════════════════════════════════
-// OVERRIDE #2: Replace attachViewButtons (called after render)
-// Fixes parseInt(uuid) bug AND adds floating icons on images.
-// ══════════════════════════════════════════════════════════════
-window.attachViewButtons = function () {
-  // View product buttons (keep original behavior)
-  document.querySelectorAll(".view-product").forEach(function (btn) {
-    btn.addEventListener("click", function (e) {
-      var id = e.target.getAttribute("data-id");
-      if (typeof openProductModal === "function") openProductModal(id);
-    });
-  });
-
-  // AR buttons — use string ID, not parseInt
-  document.querySelectorAll(".view-ar").forEach(function (btn) {
-    btn.addEventListener("click", function (e) {
-      var id = e.target.getAttribute("data-id");
-      console.log("[RoomMuse] AR button clicked, id:", id);
-      if (id) _rmar_openModal(id);
-    });
-  });
-
-  // Add floating AR icons on product card images
-  _rmar_addFloatingIcons();
-};
-
-// ══════════════════════════════════════════════════════════════
 // PHONE DEEP LINK: if ?rmar_arId=... then fetch model + auto-open AR
 // ══════════════════════════════════════════════════════════════
 (function rmarHandleDeepLink() {
