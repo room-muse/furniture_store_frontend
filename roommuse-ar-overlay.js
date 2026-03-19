@@ -164,6 +164,7 @@ function _rmar_fetchModel(itemId) {
         name: d.name || d.item_name || "Furniture",
         category: d.category || d.type || "furniture",
         modelUrl: d.usdzUrl,
+        imageUrl: d.imageUrl || null,
         dimensions: {
           length: d.length || (d.dimensions && d.dimensions.length) || null,
           width: d.width || (d.dimensions && d.dimensions.width) || null,
@@ -422,27 +423,12 @@ window.attachViewButtons = function () {
     var arId = params.get("arId") || params.get("id") || params.get("ar_id");
     if (!arId) return;
 
-    function resolveUsdz(url) {
-      if (!url) return null;
-      var u = String(url).trim();
-      if (u.toLowerCase().endsWith(".usdz")) return u.split("#")[0];
-      try {
-        var m = new URL(u).searchParams.get("model");
-        if (m && m.toLowerCase().endsWith(".usdz")) return m.split("#")[0];
-      } catch (e) {}
-      var idx = u.toLowerCase().indexOf(".usdz");
-      if (idx !== -1) return u.slice(0, idx + 5).split("#")[0];
-      return null;
-    }
-
     _rmar_fetchModel(String(arId)).then(function (item) {
-      var usdz =
-        resolveUsdz(item && item.modelUrl) || resolveUsdz(item && item.usdzUrl);
+      var usdz = item && item.modelUrl;
       if (!usdz) return;
 
       var href = usdz + "#allowsContentScaling=0";
-      var imageUrl =
-        (item && (item.imageUrl || item.thumbnailUrl || item.image)) || "";
+      var imageUrl = (item && item.imageUrl) || "";
 
       // Add <a rel="ar"><img></a> to the DOM
       var a = document.createElement("a");
