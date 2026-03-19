@@ -160,16 +160,12 @@ function _rmar_fetchModel(itemId) {
     })
     .then(function (d) {
       var item = {
-        id: d.id || itemId,
-        name: d.name || d.item_name || "Furniture",
-        category: d.category || d.type || "furniture",
+        id: d.id,
+        name: d.name,
+        category: d.category,
         modelUrl: d.usdzUrl,
-        imageUrl: d.imageUrl || null,
-        dimensions: {
-          length: d.length || (d.dimensions && d.dimensions.length) || null,
-          width: d.width || (d.dimensions && d.dimensions.width) || null,
-          height: d.height || (d.dimensions && d.dimensions.height) || null,
-        },
+        imageUrl: d.imageUrl,
+        dimensions: d.dimensions,
       };
       console.log(item);
       _roommuse_cache[itemId] = item;
