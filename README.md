@@ -33,7 +33,7 @@ An interactive and responsive eCommerce frontend for a furniture store, built us
 
 ```
 git clone https://github.com/room-muse/furniture_store_frontend.git
-cd Furniture-Store
+cd furniture_store_frontend
 ```
 
 **Run locally:** start a simple HTTP server, then open [http://localhost:8080](http://localhost:8080) in your browser:
