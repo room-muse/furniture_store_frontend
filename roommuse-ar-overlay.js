@@ -270,43 +270,43 @@ function _rmar_openModal(productId) {
     }
   }
 
-  // _rmar_fetchModel(productId).then(function (item) {
-  //   if (!ov.parentNode) return;
-  //   var qrUrl = _rmar_buildQrLink(productId);
-  //   if (item && item.dimensions && item.dimensions.length) {
-  //     dims.textContent =
-  //       item.dimensions.length +
-  //       "m \u00D7 " +
-  //       item.dimensions.width +
-  //       "m \u00D7 " +
-  //       item.dimensions.height +
-  //       "m";
-  //   }
-  //   qr.innerHTML = "";
-  //   if (typeof QRCode !== "undefined") {
-  //     new QRCode(qr, {
-  //       text: qrUrl,
-  //       width: ROOMMUSE_QR_SIZE,
-  //       height: ROOMMUSE_QR_SIZE,
-  //       colorDark: "#233B3D",
-  //       colorLight: "#ffffff",
-  //       correctLevel: QRCode.CorrectLevel.H,
-  //     });
-  //   } else {
-  //     qr.innerHTML =
-  //       '<a href="' +
-  //       qrUrl +
-  //       '" target="_blank" style="word-break:break-all;color:#2e7d32">' +
-  //       qrUrl +
-  //       "</a>";
-  //   }
-  //     if (!item || !item.modelUrl) {
-  //       qr.insertAdjacentHTML(
-  //         "afterend",
-  //         '<p class="rmar-note">3D model not generated yet. Make sure the CSV was uploaded to the backend.</p>',
-  //       );
-  //     }
-  //   });
+  _rmar_fetchModel(productId).then(function (item) {
+    if (!ov.parentNode) return;
+    var qrUrl = _rmar_buildQrLink(productId);
+    if (item && item.dimensions && item.dimensions.length) {
+      dims.textContent =
+        item.dimensions.length +
+        "m \u00D7 " +
+        item.dimensions.width +
+        "m \u00D7 " +
+        item.dimensions.height +
+        "m";
+    }
+    qr.innerHTML = "";
+    if (typeof QRCode !== "undefined") {
+      new QRCode(qr, {
+        text: qrUrl,
+        width: ROOMMUSE_QR_SIZE,
+        height: ROOMMUSE_QR_SIZE,
+        colorDark: "#233B3D",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H,
+      });
+    } else {
+      qr.innerHTML =
+        '<a href="' +
+        qrUrl +
+        '" target="_blank" style="word-break:break-all;color:#2e7d32">' +
+        qrUrl +
+        "</a>";
+    }
+    if (!item || !item.modelUrl) {
+      qr.insertAdjacentHTML(
+        "afterend",
+        '<p class="rmar-note">3D model not generated yet. Make sure the CSV was uploaded to the backend.</p>',
+      );
+    }
+  });
 }
 
 // ══════════════════════════════════════════════════════════════
