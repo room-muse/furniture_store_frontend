@@ -464,6 +464,38 @@ document.addEventListener("DOMContentLoaded", () => {
   cartCount.textContent = `Cart (${cart.length})`;
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  loadCart();
+
+  var companyId = new URLSearchParams(window.location.search).get("company");
+
+  if (companyId) {
+    fetch("https://ar-backend-563656133641.us-central1.run.app/items?company_id=" + encodeURIComponent(companyId))
+      .then(function(r) { return r.json(); })
+      .then(function(items) {
+        currentProductList = items.map(function(item) {
+          return {
+            id: item.productId,
+            name: item.name,
+            price: 0,
+            category: item.category,
+            image: item.imageUrl,
+            description: "",
+          };
+        });
+        products.length = 0;
+        currentProductList.forEach(function(p) { products.push(p); });
+        loadPage(1, itemsPerPage, currentProductList);
+      });
+  } else {
+    currentProductList = [...products];
+    loadPage(1, itemsPerPage, currentProductList);
+  }
+
+  updateCartDisplay();
+  cartCount.textContent = `Cart (${cart.length})`;
+});
+
 // ========== Scroll to Top Button ========== //
 document.body.insertAdjacentHTML(
   "beforeend",
