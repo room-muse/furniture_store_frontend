@@ -1,6 +1,7 @@
 var API_KEYS = {
   "mock-site-1": "fsk_live_a990fdc1c4a4fc3cca1c2f2211ce67aa35c35981cd3c8776",
   "ystore": "fsk_live_3a811f4e724762f63f1d6783229f8c2b8951d17c3bc08386",
+  "weisshouse": "fsk_live_12b7cd339b123b8177fd9c0be06a959906d8874bff5fb72e",
 };
 
 (function loadSDK() {
