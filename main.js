@@ -181,7 +181,6 @@ function renderProducts(list) {
     item.innerHTML = `
             <img src="${product.image}" alt="${product.name}" class="product-image" title="${product.name}">
             <h3 class="product-name">${product.name}</h3>
-            <p>Price: $${product.price}</p>
             <button onclick="addToCart('${product.id}')" class="add-to-cart btn-primary">Add to Cart</button>
             <div class="product-actions">
                 <button class="view-product btn-primary" data-id="${product.id}">View</button>
