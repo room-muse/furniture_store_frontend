@@ -1,3 +1,17 @@
+var API_KEYS = {
+  "mock-site-1": "fsk_live_a990fdc1c4a4fc3cca1c2f2211ce67aa35c35981cd3c8776",
+  "ystore": "fsk_live_3a811f4e724762f63f1d6783229f8c2b8951d17c3bc08386",
+};
+
+(function loadSDK() {
+  var company = new URLSearchParams(window.location.search).get("company") || "mock-site-1";
+  var apiKey = API_KEYS[company] || API_KEYS["mock-site-1"];
+  var s = document.createElement("script");
+  s.src = "https://room-muse.github.io/ar-sdk/sdk.js";
+  s.setAttribute("data-api-key", apiKey);
+  document.head.appendChild(s);
+})();
+
 // ========== Menu Toggle ========== //
 (function initMenuToggle() {
   const menuToggle = document.getElementById("menu-toggle");
@@ -469,7 +483,8 @@ document.addEventListener("DOMContentLoaded", () => {
   var companyId = new URLSearchParams(window.location.search).get("company");
 
   if (companyId) {
-    fetch("https://ar-backend-563656133641.us-central1.run.app/items?company_id=" + encodeURIComponent(companyId))
+    var fetchCompanyId = "demo-" + companyId;
+    fetch("https://ar-backend-563656133641.us-central1.run.app/items?company_id=" + encodeURIComponent(fetchCompanyId))
       .then(function(r) { return r.json(); })
       .then(function(items) {
         currentProductList = items.map(function(item) {
