@@ -2,6 +2,17 @@ var API_KEYS = {
   "mock-site-1": "fsk_live_a990fdc1c4a4fc3cca1c2f2211ce67aa35c35981cd3c8776",
   "ystore": "fsk_live_3a811f4e724762f63f1d6783229f8c2b8951d17c3bc08386",
   "weisshouse": "fsk_live_12b7cd339b123b8177fd9c0be06a959906d8874bff5fb72e",
+  "amish-yard": "fsk_live_035dd435cd91db2b7d14cab9604fd1f82716d562d1822e1f",
+  "woodville-furniture": "fsk_live_bfec0c09b9c11281e326d4dfbf891176ae65e72433da0ca3",
+  "contemporary-concepts": "fsk_live_4a53eb434f174b8c7a989c9edfe1bd79760403cd350c18bd",
+  "perlora-furniture": "fsk_live_2e68df8d13408fa5c46e790e79dde88b2b0587d19840f597",
+  "todays-home": "fsk_live_3271a84fded0bdb154cd6baecfea6cb707386e8378ffea1e",
+  "shepards-furniture": "fsk_live_0cd83f72f76a7b7feaf9ee35ca74a4a1441b0fb55d0693ab",
+  "wolfs-furniture": "fsk_live_08a6b64bf08ad4095b967378ebf364baae8d788d547aeeea",
+  "arhaus": "fsk_live_24f2ea89a5ae96454e3d6c0e7ed39e76e589128265f604ec",
+  "levin": "fsk_live_5cec91372060607ae6cbb8b5a0ff24d16db35aece5bf2c36",
+  "sixpenny": "fsk_live_ee630b17406625d356128882906cdc569a4c1a45aa764c72",
+  "bd-home": "fsk_live_f66bae9b0102876cbea1a1240d5d42277c7567f0c18916d8",
 };
 
 (function loadSDK() {
