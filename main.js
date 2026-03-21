@@ -259,8 +259,6 @@ function openProductModal(productId) {
   if (!product) return;
 
   document.getElementById("modal-product-title").textContent = product.name;
-  document.getElementById("modal-product-price").textContent =
-    `$${product.price}`;
   document.getElementById("modal-product-image").src = product.image;
   document.getElementById("modal-product-description").textContent =
     product.description;
