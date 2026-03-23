@@ -166,12 +166,12 @@ function renderProducts(list) {
 function attachViewButtons() {
   document.querySelectorAll(".view-product").forEach((button) => {
     button.addEventListener("click", (e) => {
-      openProductModal(e.target.getAttribute("data-id"));
+      openProductModal(e.currentTarget.getAttribute("data-id"));
     });
   });
   document.querySelectorAll(".view-ar").forEach((button) => {
     button.addEventListener("click", (e) => {
-      openArView(e.target.getAttribute("data-id"));
+      openArView(e.currentTarget.getAttribute("data-rm-id"));
     });
   });
 }
@@ -220,15 +220,25 @@ function openProductModal(productId) {
   document.getElementById("modal-product-image").src = product.image;
   document.getElementById("modal-product-description").textContent =
     product.description;
+  const modalAddBtn = document.getElementById("modal-add-to-cart");
+  if (modalAddBtn) modalAddBtn.setAttribute("data-id", product.id);
   const modalArBtn = document.getElementById("modal-view-ar");
   if (modalArBtn) modalArBtn.setAttribute("data-rm-id", product.id);
   document.getElementById("product-modal").style.display = "flex";
 }
 
+const modalAddToCart = document.getElementById("modal-add-to-cart");
+if (modalAddToCart) {
+  modalAddToCart.addEventListener("click", (e) => {
+    addToCart(e.currentTarget.getAttribute("data-id"));
+    document.getElementById("product-modal").style.display = "none";
+  });
+}
+
 const modalViewAr = document.getElementById("modal-view-ar");
 if (modalViewAr) {
   modalViewAr.addEventListener("click", (e) => {
-    openArView(e.target.getAttribute("data-id"));
+    openArView(e.currentTarget.getAttribute("data-rm-id"));
   });
 }
 
@@ -336,6 +346,16 @@ function saveCart() {
 const alertEl = document.getElementById("alert");
 const cartContainer = document.getElementById("cart");
 const cartCount = document.getElementById("cart-count");
+
+function addToCart(productId) {
+  const product = products.find((p) => p.id === productId);
+  if (!product) return;
+
+  cart.push(product);
+  saveCart();
+  showAlert(`${product.name} added to cart!`);
+  updateCartDisplay();
+}
 
 function showAlert(message) {
   alertEl.textContent = message;
