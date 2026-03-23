@@ -5,7 +5,7 @@ var API_KEYS = {
   "amish-yard": "fsk_live_035dd435cd91db2b7d14cab9604fd1f82716d562d1822e1f",
   "woodville-furniture": "fsk_live_bfec0c09b9c11281e326d4dfbf891176ae65e72433da0ca3",
   "contemporary-concepts": "fsk_live_4a53eb434f174b8c7a989c9edfe1bd79760403cd350c18bd",
-  "perlora-furniture": "fsk_live_2e68df8d13408fa5c46e790e79dde88b2b0587d19840f597",
+  "perlora": "fsk_live_2e68df8d13408fa5c46e790e79dde88b2b0587d19840f597",
   "todays-home": "fsk_live_3271a84fded0bdb154cd6baecfea6cb707386e8378ffea1e",
   "shepards-furniture": "fsk_live_0cd83f72f76a7b7feaf9ee35ca74a4a1441b0fb55d0693ab",
   "wolfs-furniture": "fsk_live_08a6b64bf08ad4095b967378ebf364baae8d788d547aeeea",
