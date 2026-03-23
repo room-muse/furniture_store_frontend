@@ -252,10 +252,7 @@ document.querySelectorAll(".close-product-modal").forEach((btn) => {
 function openArView(productId) {
   const product = products.find((p) => p.id === productId);
   if (!product) return;
-  // Placeholder: show message. Replace with your 3D/AR viewer (e.g. model-viewer, AR link).
-  showAlert(
-    `3D/AR view for ${product.name} — try it on a device with AR support!`,
-  );
+  // Hook your 3D/AR viewer here (e.g. model-viewer, deep link).
 }
 
 // ========== Search Functionality ========== //
