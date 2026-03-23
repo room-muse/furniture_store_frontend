@@ -103,77 +103,18 @@ var API_KEYS = {
 })();
 
 // ========== Product Data ========== //
-const products = [
-  {
-    id: "1",
-    name: "Cozy Swivel Chair",
-    price: 299,
-    category: "chair",
-    image: "images/p1.png",
-    description: "A cozy swivel chair for comfortable seating with a smooth 360-degree turn.",
-  },
-  {
-    id: "2",
-    name: "Ethan Sofa",
-    price: 599,
-    category: "sofa",
-    image: "images/p2.png",
-    description: "The Ethan Sofa combines classic style with modern comfort for your living space.",
-  },
-  {
-    id: "3",
-    name: "Calla Solid Wood Coffee Table",
-    price: 349,
-    category: "table",
-    image: "images/p3.png",
-    description: "A solid wood coffee table with clean lines and durable construction.",
-  },
-  {
-    id: "4",
-    name: "Stowe Solid Wood Side Table",
-    price: 199,
-    category: "table",
-    image: "images/p4.png",
-    description: "A versatile solid wood side table ideal next to sofas or beds.",
-  },
-  {
-    id: "5",
-    name: "Mid-Century Bookshelf w/ Drawer",
-    price: 429,
-    category: "bookcase",
-    image: "images/p5.png",
-    description: "A mid-century bookshelf with an integrated drawer for extra storage.",
-  },
-  {
-    id: "6",
-    name: "Willow Round Coffee Table",
-    price: 279,
-    category: "table",
-    image: "images/p6.png",
-    description: "A round coffee table with a willow-inspired design for a natural look.",
-  },
-  {
-    id: "7",
-    name: "Ellington Oval Pedestal Dining Table",
-    price: 799,
-    category: "table",
-    image: "images/p7.png",
-    description: "An oval pedestal dining table, perfect for family meals and entertaining.",
-  },
-  {
-    id: "8",
-    name: "Stuart Sling Chair",
-    price: 249,
-    category: "chair",
-    image: "images/p8.png",
-    description: "A sleek sling chair with a relaxed profile for indoor or outdoor use.",
-  },
-];
+const products = [];
 
 // ========== Generate Category Filters ========== //
-(function generateCategoryFilters() {
-  const categories = [...new Set(products.map((p) => p.category))];
+function generateCategoryFilters() {
   const container = document.getElementById("category-filters");
+  if (!container) return;
+  container.innerHTML = "";
+  const categories = [
+    ...new Set(
+      products.map((p) => p.category).filter((c) => c != null && c !== ""),
+    ),
+  ];
   categories.forEach((category) => {
     const label = document.createElement("label");
     label.innerHTML = `
@@ -182,7 +123,9 @@ const products = [
         `;
     container.appendChild(label);
   });
-})();
+}
+
+generateCategoryFilters();
 
 // ========== Filter Sidebar Toggle ========== //
 const toggleBtn = document.getElementById("filter-toggle");
@@ -509,6 +452,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         products.length = 0;
         currentProductList.forEach(function(p) { products.push(p); });
+        generateCategoryFilters();
         loadPage(1, itemsPerPage, currentProductList);
       });
   } else {
