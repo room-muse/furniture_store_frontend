@@ -156,7 +156,7 @@ function renderProducts(list) {
             <h3 class="product-name">${product.name}</h3>
             <div class="product-actions">
                 <button class="view-product btn-primary" data-id="${product.id}">View</button>
-                <button class="view-ar btn-ar" data-rm-id="${product.id}">3D/AR</button>
+                <button class="view-ar btn-primary" data-rm-id="${product.id}">3D/AR</button>
             </div>
         `;
     container.appendChild(item);
