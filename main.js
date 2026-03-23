@@ -154,7 +154,6 @@ function renderProducts(list) {
     item.innerHTML = `
             <img src="${product.image}" alt="${product.name}" class="product-image" title="${product.name}">
             <h3 class="product-name">${product.name}</h3>
-            <button onclick="addToCart('${product.id}')" class="add-to-cart btn-primary">Add to Cart</button>
             <div class="product-actions">
                 <button class="view-product btn-primary" data-id="${product.id}">View</button>
                 <button class="view-ar btn-ar" data-rm-id="${product.id}">3D/AR</button>
@@ -221,18 +220,10 @@ function openProductModal(productId) {
   document.getElementById("modal-product-image").src = product.image;
   document.getElementById("modal-product-description").textContent =
     product.description;
-  document
-    .getElementById("modal-add-to-cart")
-    .setAttribute("data-id", product.id);
   const modalArBtn = document.getElementById("modal-view-ar");
   if (modalArBtn) modalArBtn.setAttribute("data-rm-id", product.id);
   document.getElementById("product-modal").style.display = "flex";
 }
-
-document.getElementById("modal-add-to-cart").addEventListener("click", (e) => {
-  addToCart(e.target.getAttribute("data-id"));
-  document.getElementById("product-modal").style.display = "none";
-});
 
 const modalViewAr = document.getElementById("modal-view-ar");
 if (modalViewAr) {
@@ -345,16 +336,6 @@ function saveCart() {
 const alertEl = document.getElementById("alert");
 const cartContainer = document.getElementById("cart");
 const cartCount = document.getElementById("cart-count");
-
-function addToCart(productId) {
-  const product = products.find((p) => p.id === productId);
-  if (!product) return;
-
-  cart.push(product);
-  saveCart();
-  showAlert(`${product.name} added to cart!`);
-  updateCartDisplay();
-}
 
 function showAlert(message) {
   alertEl.textContent = message;
