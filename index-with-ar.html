@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Furniture Store</title>
+    <title>RoomMuse Demo</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet" />
@@ -20,8 +20,8 @@
     <div class="container">
         <!-- Header -->
         <header>
-            <h1>Modern Furniture Store</h1>
-            <p>Quality. Comfort. Style.</p>
+            <h1>RoomMuse Demo</h1>
+            <p>View Any Furniture In Your Space</p>
         </header>
 
         <!-- Navigation -->
@@ -31,7 +31,6 @@
                 <a href="#home" class="nav-link">Home</a>
                 <a href="#shop" class="nav-link">Shop</a>
                 <a href="#about" class="nav-link">About</a>
-                <a href="#contact" class="nav-link">Contact</a>
             </span>
             <a href="#cart" class="cart-icon" id="cart-icon">
                 <i class="fa-solid fa-cart-shopping"></i>
@@ -71,9 +70,7 @@
         <!-- Hero -->
         <section class="hero" id="home">
             <div class="hero-text">
-                <h1>Discover Your Perfect Space</h1>
-                <p>Explore our curated collection of modern and classic furniture to transform your home.</p>
-                <a href="#shop" class="btn-primary">Shop Now</a>
+                <h1>Experience Furniture in AR</h1>
             </div>
         </section>
 
@@ -84,9 +81,6 @@
 
             <!-- Search Filter Container -->
             <div class="search-filter-container">
-                <!-- Filter Toggle Button -->
-                <button id="filter-toggle" class="filter-toggle"><i class="fa-solid fa-bars"></i> Filters</button>
-
                 <!-- Sliding Sidebar for Filters -->
                 <aside id="filter-sidebar">
                     <div id="filter-section">
@@ -139,64 +133,13 @@
             <h2>About Us</h2>
             <div class="about-container">
                 <div class="about-text">
-                    <p>Welcome to Modern Furniture Store, your one-stop destination for high-quality furniture that
-                        combines style and comfort.</p>
-                    <p>Our mission is to provide the best selection of modern and classic pieces that suit your taste
-                        and budget.</p>
-                    <p>Furniture should not only be functional but also enhance the beauty of your home. We carefully
-                        curate our collection with premium materials to reflect that vision.</p>
+                    <p>RoomMuse is a B2B AR plugin that lets furniture brands embed 'view-in-room' experiences.
+                        From catalog to AR in under a week — no in-house 3D team required.</p>
                 </div>
                 <div class="about-image">
                     <img src="images/b8.jpg" alt="About Us" />
                 </div>
             </div>
-        </section>
-
-        <!-- Testimonials -->
-        <section class="testimonials">
-            <h2>What Our Customers Say</h2>
-            <div class="testimonial-container">
-                <div class="testimonial-card">
-                    <p>"I love my new sofa! It's comfortable and looks great in my living room."</p>
-                    <h3>- Sarah J.</h3>
-                </div>
-                <div class="testimonial-card">
-                    <p>"The quality of the furniture is outstanding. Highly recommend!"</p>
-                    <h3>- Mark T.</h3>
-                </div>
-                <div class="testimonial-card">
-                    <p>"Great customer service and fast delivery. Will shop again!"</p>
-                    <h3>- Emily R.</h3>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact -->
-        <section class="contact" id="contact">
-            <h2>Contact Us</h2>
-            <p>If you have any questions or need assistance, feel free to reach out.</p>
-            <p>Email: <a href="mailto:modernf@gmail.com">modernf@gmail.com</a></p>
-            <p>Phone: <a href="tel:+1234567890">+1 (234) 567-890</a></p>
-            <p>Address: 123 Modern St, Furniture City, FC 12345</p>
-            <p>We are here to help you with any inquiries or support.</p>
-            <p>Follow us for the latest updates and promotions:</p>
-            <div class="social-icons">
-                <a href="#" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#" class="social-icon"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="#" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#" class="social-icon"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="#" class="social-icon"><i class="fa-brands fa-pinterest"></i></a>
-            </div>
-        </section>
-
-        <!-- Newsletter -->
-        <section class="newsletter">
-            <h2>Subscribe to Our Newsletter</h2>
-            <p>Stay updated with the latest furniture trends, promotions, and offers.</p>
-            <form id="newsletter-form">
-                <input type="email" placeholder="Enter your email" required />
-                <button type="submit" class="btn-primary">Subscribe</button>
-            </form>
         </section>
 
         <!-- Footer -->
@@ -208,30 +151,13 @@
                         <li><a href="#">Home</a></li>
                         <li><a href="#">Shop</a></li>
                         <li><a href="#">About Us</a></li>
-                        <li><a href="#">Contact Us</a></li>
                     </ul>
-                </div>
-                <div class="footer-contact">
-                    <h3>Contact Us</h3>
-                    <p>Email: <a href="mailto:modernf@gmail.com">modernf@gmail.com</a></p>
-                    <p>Phone: <a href="tel:+1234567890">+1 (234) 567-890</a></p>
-                    <p>Address: 123 Modern St, Furniture City, FC 12345</p>
-                </div>
-                <div class="footer-social">
-                    <h3>Follow Us</h3>
-                    <div class="social-icons">
-                        <a href="#" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="#" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#" class="social-icon"><i class="fa-brands fa-linkedin-in"></i></a>
-                        <a href="#" class="social-icon"><i class="fa-brands fa-pinterest"></i></a>
-                    </div>
                 </div>
             </div>
             <hr />
             <div class="footer-bottom">
                 <p>&copy; 2025 -
-                    <script>document.write(new Date().getFullYear());</script> Modern Furniture Store. All rights
+                    <script>document.write(new Date().getFullYear());</script> RoomMuse Demo. All rights
                     reserved.
                 </p>
                 <p>Designed by <a href="https://paulmagadi.github.io" target="_blank"

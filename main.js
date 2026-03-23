@@ -132,13 +132,17 @@ const toggleBtn = document.getElementById("filter-toggle");
 const filterSidebar = document.getElementById("filter-sidebar");
 const closeBtn = document.getElementById("close-filter");
 
-toggleBtn.addEventListener("click", () => {
-  filterSidebar.classList.add("open");
-});
+if (toggleBtn && filterSidebar) {
+  toggleBtn.addEventListener("click", () => {
+    filterSidebar.classList.add("open");
+  });
+}
 
-closeBtn.addEventListener("click", () => {
-  filterSidebar.classList.remove("open");
-});
+if (closeBtn && filterSidebar) {
+  closeBtn.addEventListener("click", () => {
+    filterSidebar.classList.remove("open");
+  });
+}
 
 // ========== Product Rendering ========== //
 function renderProducts(list) {
