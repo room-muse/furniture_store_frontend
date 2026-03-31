@@ -13,6 +13,7 @@ var API_KEYS = {
   "levin": "fsk_live_5cec91372060607ae6cbb8b5a0ff24d16db35aece5bf2c36",
   "sixpenny": "fsk_live_ee630b17406625d356128882906cdc569a4c1a45aa764c72",
   "bd-home": "fsk_live_f66bae9b0102876cbea1a1240d5d42277c7567f0c18916d8",
+  "crate-and-barrel": "fsk_live_0dc8c70389bb19a215696f60a5f8313b1bb71983cec681f2",
 };
 
 (function loadSDK() {
