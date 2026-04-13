@@ -15,7 +15,7 @@ var API_KEYS = {
   "bd-home": "fsk_live_f66bae9b0102876cbea1a1240d5d42277c7567f0c18916d8",
   "crate-and-barrel": "fsk_live_0dc8c70389bb19a215696f60a5f8313b1bb71983cec681f2",
   "rh": "fsk_live_9b06f54bf7e735feaab088ab23665351a402fecde22fc502",
-  "demo-mozu": "fsk_live_6f2605bb953d5e90cd42a505f12052d7a781ba16f812e071",
+  "mozu": "fsk_live_6f2605bb953d5e90cd42a505f12052d7a781ba16f812e071",
 };
 
 (function loadSDK() {
