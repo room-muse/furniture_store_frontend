@@ -16,6 +16,7 @@ var API_KEYS = {
   "crate-and-barrel": "fsk_live_0dc8c70389bb19a215696f60a5f8313b1bb71983cec681f2",
   "rh": "fsk_live_9b06f54bf7e735feaab088ab23665351a402fecde22fc502",
   "mozu": "fsk_live_6f2605bb953d5e90cd42a505f12052d7a781ba16f812e071",
+  "foa": "fsk_live_a301c4cb0e853758ac5de599c4bc511c043eab1ee2f0e829",
 };
 
 (function loadSDK() {
