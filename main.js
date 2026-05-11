@@ -23,7 +23,7 @@ var API_KEYS = {
   var company = new URLSearchParams(window.location.search).get("company") || "mock-site-1";
   var apiKey = API_KEYS[company] || API_KEYS["mock-site-1"];
   var s = document.createElement("script");
-  s.src = "https://room-muse.github.io/ar-sdk/sdk.js";
+  s.src = "https://adrao1.github.io/ar-sdk/sdk.js";
   s.setAttribute("data-api-key", apiKey);
   document.head.appendChild(s);
 })();
