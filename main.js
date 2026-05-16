@@ -17,6 +17,7 @@ var API_KEYS = {
   "rh": "fsk_live_9b06f54bf7e735feaab088ab23665351a402fecde22fc502",
   "mozu": "fsk_live_6f2605bb953d5e90cd42a505f12052d7a781ba16f812e071",
   "foa": "fsk_live_a301c4cb0e853758ac5de599c4bc511c043eab1ee2f0e829",
+  "colaab": "fsk_live_1db389e2c34813dc8d5dca5e2024fc4bd006f71d75e3d65e",
 };
 
 (function loadSDK() {
